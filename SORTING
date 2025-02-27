@@ -111,7 +111,7 @@ def partition(L, lower, upper):
     i = lower  # Index of smaller element
     
     # Traverse through all elements from lower + 1 to upper
-    for j in range(lower + 1, upper + 1):
+    for j in range(lower + 1, upper):
         # If current element is less than or equal to pivot
         if L[j] <= pivot:
             i += 1  # Increment index of smaller element
