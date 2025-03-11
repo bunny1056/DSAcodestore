@@ -116,7 +116,7 @@ def partition(L, lower, upper):
         if L[j] <= pivot:
             i += 1  # Increment index of smaller element
             # Swap L[i] and L[j]
-            L[i], L[j] = L[j], L[i]
+        L[i], L[j] = L[j], L[i]
     
     # Swap L[lower] (pivot) and L[i] to place pivot in its correct position
     L[lower], L[i] = L[i], L[lower]
