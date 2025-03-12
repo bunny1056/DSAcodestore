@@ -1,0 +1,93 @@
+import math
+
+# Point class to store x, y coordinates
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+# Function to calculate Euclidean distance between two points
+def dist(p1, p2):
+    return math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)
+
+# Function to find the closest pair in a strip
+def strip_closest(strip, d):
+    min_dist = d
+    n = len(strip)
+    # Sort strip by y-coordinate
+    strip.sort(key=lambda point: point.y)
+    
+    # Check at most 7 points for each point in the strip
+    for i in range(n):
+        j = i + 1
+        while j < n and (strip[j].y - strip[i].y) < min_dist:
+            if dist(strip[i], strip[j]) < min_dist:
+                min_dist = dist(strip[i], strip[j])
+            j += 1
+    return min_dist
+
+# Recursive function to find the closest pair
+def closest_pair_util(points_x, points_y, n):
+    # Base case: 3 or fewer points
+    if n <= 3:
+        min_dist = float('inf')
+        for i in range(n):
+            for j in range(i + 1, n):
+                min_dist = min(min_dist, dist(points_x[i], points_x[j]))
+        return min_dist
+
+    # Find the middle point
+    mid = n // 2
+    mid_point = points_x[mid]
+
+    # Divide points into left and right halves
+    left_x = points_x[:mid]
+    right_x = points_x[mid:]
+    
+    # Create y-sorted arrays for left and right halves
+    left_y = [p for p in points_y if p.x <= mid_point.x]
+    right_y = [p for p in points_y if p.x > mid_point.x]
+
+    # Recursively find the smallest distances in both halves
+    dl = closest_pair_util(left_x, left_y, mid)
+    dr = closest_pair_util(right_x, right_y, n - mid)
+    d = min(dl, dr)
+
+    # Find points in the strip of width 2d around the middle line
+    strip = []
+    for point in points_y:
+        if abs(point.x - mid_point.x) < d:
+            strip.append(point)
+
+    # Find the closest pair in the strip
+    ds = strip_closest(strip, d)
+    return min(d, ds)
+
+# Main function to find the closest pair
+def closest_pair(points, n):
+    # Sort points by x and y coordinates
+    points_x = sorted(points, key=lambda point: point.x)
+    points_y = sorted(points, key=lambda point: point.y)
+    return closest_pair_util(points_x, points_y, n)
+
+# Example usage
+if __name__ == "__main__":
+    # Example points
+    points = [Point(2, 3), Point(12, 30), Point(40, 50), Point(5, 1), Point(12, 10), Point(3, 4)]
+    n = len(points)
+    
+    min_distance = closest_pair(points, n)
+    print(f"The minimum distance between closest pair of points is {min_distance:.6f}")
+
+    # Find and print the closest pair (for illustration)
+    min_dist = float('inf')
+    closest_pair_points = (None, None)
+    for i in range(n):
+        for j in range(i + 1, n):
+            d = dist(points[i], points[j])
+            if d < min_dist:
+                min_dist = d
+                closest_pair_points = (points[i], points[j])
+    
+    print(f"Closest pair: ({closest_pair_points[0].x}, {closest_pair_points[0].y}) and "
+          f"({closest_pair_points[1].x}, {closest_pair_points[1].y})")
