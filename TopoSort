@@ -1,0 +1,46 @@
+def topologicalSort(self,adj):
+        
+        st =[]
+        n = len(adj)
+        visited = [False] * n
+        
+        def dfs(node):
+            visited[node] = True
+            for neighbour in adj[node]:
+                if not visited[neighbour]:
+                    dfs(neighbour)
+            st.append(node)
+        
+        for i in range(n):
+            if not visited[i]:
+                dfs(i)
+                
+        return st[::-1]
+
+kahn's algo
+from collections import deque
+from typing import List
+
+class Solution:
+    def topoSort(self, V: int, adj: List[List[int]]) -> List[int]:
+        in_degree = [0] * V
+        for u in range(V):
+            for v in adj[u]:
+                in_degree[v] += 1
+        
+        queue = deque()
+        for i in range(V):
+            if in_degree[i] == 0:
+                queue.append(i)
+        
+        topo_order = []
+        while queue:
+            u = queue.popleft()
+            topo_order.append(u)
+            for v in adj[u]:
+                in_degree[v] -= 1
+                if in_degree[v] == 0:
+                    queue.append(v)
+        
+        return topo_order if len(topo_order) == V else [] #use this fact to detect cycle in directed cycle
+
