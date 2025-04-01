@@ -203,6 +203,29 @@ class Solution:
         		            return 1
 	    return 0	
 SAME for DFS
+from typing import List
+from collections import deque
+class Solution:
+    #Function to detect cycle in an undirected graph.
+    def isCycle(self, V: int, adj: List[List[int]]) -> bool:
+        #Code here
+        visited = [False] * V
+        parent = [-1] * V
+        for i in range(V):
+            if not visited[i]:
+                st = []
+                st.append(i)
+                while st:
+                    current = st.pop()
+                    visited[current] = True
+                    for neighbour in reversed(adj[current]):
+                        if not visited[neighbour]:
+                            st.append(neighbour)
+                            parent[neighbour] = current
+                        elif neighbour != parent[current]:
+                            return 1
+        return 0                        
+# neighbour = parent[current] -- tree edge
 
 Surrounded Regions
 Key insight
@@ -308,7 +331,55 @@ class Solution:
                     if next_word in wordSet and next_word not in visited:
                         Q.append((next_word,length + 1))
                         visited.add(next_word)
-        return 0        
+        return 0 
+
+Detect cycle in directed graph DFS 
+def is_cyclic_directed(graph):
+    visited = set()
+    rec_stack = set()
+    
+    def dfs(node):
+        visited.add(node)
+        rec_stack.add(node)
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                if dfs(neighbor):
+                    return True
+            elif neighbor in rec_stack:  # Back edge → cycle
+                return True
+        rec_stack.remove(node)  # Backtrack
+        return False
+    
+    for node in graph:
+        if node not in visited:
+            if dfs(node):
+                return True
+    return False
+
+Bipartite!
+def isBipartite(self, graph: List[List[int]]) -> bool:
+        V = len(graph)
+        visited = [False]*V
+        color = [-1]*V
+
+        def dfs(i):
+            st=[i]
+            color[i] = 0
+            while st:
+                node = st.pop()
+                for neighbour in graph[node]:
+                    if color[neighbour] == -1:
+                        color[neighbour] = 1 - color[node]
+                        st.append(neighbour) 
+                    elif color[neighbour] == color[node]:
+                        return False
+            return True 
+
+        for i in range(V):
+            if color[i] == -1:
+                if not dfs(i):
+                    return False
+        return True
 
 
 
