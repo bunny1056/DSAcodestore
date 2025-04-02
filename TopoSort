@@ -25,7 +25,7 @@ class Solution:
     def topoSort(self, V: int, adj: List[List[int]]) -> List[int]:
         in_degree = [0] * V
         for u in range(V):
-            for v in adj[u]:
+            for v in adj[u]: # u → v means v depends on u
                 in_degree[v] += 1
         
         queue = deque()
@@ -44,3 +44,27 @@ class Solution:
         
         return topo_order if len(topo_order) == V else [] #use this fact to detect cycle in directed cycle
 
+def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+        in_degree = [0] * numCourses
+        V = numCourses
+        adj = [[] for _ in range(V)] #build adjacency list
+
+        for course, prereq in prerequisites:
+            adj[prereq].append(course)
+            in_degree[course] += 1
+        
+        Q = deque()
+        for u in range(V):
+            if in_degree[u] == 0:
+                Q.append(u)
+
+        topo_order =[]
+        while Q:
+            course = Q.popleft()
+            topo_order.append(course)
+            for prereq in adj[course]:
+                in_degree[prereq] -= 1
+                if in_degree[prereq] == 0:
+                    Q.append(prereq)
+        return topo_order if len(topo_order) == V else []
+        
