@@ -1,0 +1,52 @@
+DAG (topo)
+from typing import List
+from collections import deque
+
+
+class Solution:
+
+    def shortestPath(self, V: int, E: int,
+                     edges: List[List[int]]) -> List[int]:
+        pass
+        adj = [[] for _ in range(V)]
+        visited = [False]*V
+        result = [-1] * V
+        
+        for a,b,c in edges:
+            adj[a].append((b,c))
+            
+        in_degree = [0] * V
+        for u in range(V):
+            for (v, w) in adj[u]:
+                in_degree[v] += 1
+        
+        # Step 2: Initialize queue with nodes having in_degree 0
+        queue = deque()
+        for i in range(V):
+            if in_degree[i] == 0:
+                queue.append(i)
+        
+        # Step 3: Perform topological sort
+        topo_order = []
+        while queue:
+            u = queue.popleft()
+            topo_order.append(u)
+            for (v, w) in adj[u]:
+                in_degree[v] -= 1
+                if in_degree[v] == 0:
+                    queue.append(v)
+        
+        dist = [float ('inf')] * V
+        dist[0] = 0
+        
+        for u in topo_order:
+            if dist[u] != float('inf'):
+                for v, w in adj[u]:
+                    if dist[v] > dist[u] + w:
+                        dist[v] = dist[u] + w
+        for i in range(V):
+            if dist[i] == float('inf'):
+                dist[i] = -1
+        return dist
+Why topo?
+Arrange nodes such that every edge u → v has u appearing before v in the order. This guarantees that when we process u, we’ve already computed the shortest path to u, so we can safely relax its outgoing edges.
