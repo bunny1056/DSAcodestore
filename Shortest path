@@ -50,3 +50,115 @@ class Solution:
         return dist
 Why topo?
 Arrange nodes such that every edge u → v has u appearing before v in the order. This guarantees that when we process u, we’ve already computed the shortest path to u, so we can safely relax its outgoing edges.
+
+Dijkstra's
+import heapq
+class Solution:
+    # Function to find the shortest distance of all the vertices
+    # from the source vertex src.
+    def dijkstra(self, adj: List[List[Tuple[int, int]]], src: int) -> List[int]:
+        # Your code here
+        n = len(adj)
+        distances = [float('inf')] * n
+        distances[src] = 0
+        visited = set()
+        priority_queue = [(0 , src)]
+        
+        while priority_queue:
+            current_distance, current_node = heapq.heappop(priority_queue)
+            
+            if current_node in visited:
+                continue
+            visited.add(current_node)
+            
+            for neighbour, weight in adj[current_node]:
+                if neighbour in visited:
+                    continue
+                
+                distance = current_distance + weight
+                if distances[neighbour] > distance:
+                    distances[neighbour] = distance
+                    heapq.heappush(priority_queue, (distance, neighbour))
+            
+        return distances
+
+binarymaze
+
+import heapq
+from math import inf
+
+def shortestPathBinaryMatrix(grid):
+    # Edge case: if starting cell is blocked
+    if grid[0][0] == 1:
+        return -1
+    
+    n = len(grid)
+    # All 8 possible movement directions
+    directions = [(1, 0), (0, 1), (-1, 0), (0, -1),
+                 (-1, -1), (1, 1), (-1, 1), (1, -1)]
+    
+    # Priority queue: (path_length, x, y)
+    heap = []
+    heapq.heappush(heap, (1, 0, 0))
+    
+    # Distance matrix initialized with infinity
+    dist = [[inf] * n for _ in range(n)]
+    dist[0][0] = 1  # Starting cell
+    
+    while heap:
+        path_len, x, y = heapq.heappop(heap)
+        
+        # Early termination if we reach the destination
+        if x == n - 1 and y == n - 1:
+            return path_len
+        
+        # Explore all 8 directions
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            
+            # Check boundaries and if cell is walkable
+            if 0 <= nx < n and 0 <= ny < n and grid[nx][ny] == 0:
+                new_dist = path_len + 1
+                
+                # If found a shorter path
+                if new_dist < dist[nx][ny]:
+                    dist[nx][ny] = new_dist
+                    heapq.heappush(heap, (new_dist, nx, ny))
+    
+    # If destination wasn't reached
+    return -1
+
+# NOte : calculate path_len in q itself
+
+min no of multiplication steps
+Modulo Operation: Since each multiplication is followed by a modulo 100000 operation, the possible values of start are constrained between 0 and 99999. This means the state space is limited to 100,000 possible values, making the problem feasible for a BFS approach.
+Breadth-First Search (BFS): BFS is suitable here because it explores all possible states level by level, ensuring that the first time we reach the end value, it is with the minimum number of steps.
+Visited Tracking: To avoid reprocessing the same value multiple times and entering infinite loops, maintain a visited array or dictionary to keep track of the steps taken to reach each value.
+from typing import List
+ 
+class Solution:
+    
+    def minimumMultiplications(self, arr : List[int], start : int, end : int) -> int:
+        # code here
+        from collections import deque
+        MOD = 100000
+        if start == end:
+            return 0
+        
+        visited = [-1] * MOD
+        queue = deque()
+        queue.append((start, 0))
+        visited[start] = 0
+        
+        while queue:
+            current, steps = queue.popleft()
+            
+            for num in arr:
+                next_val = (current * num) % MOD
+                if next_val == end:
+                    return steps + 1
+                if visited[next_val] == -1:
+                    visited[next_val] = steps + 1
+                    queue.append((next_val, steps + 1))
+        
+        return -1
