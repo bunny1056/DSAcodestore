@@ -163,7 +163,7 @@ class Solution:
         
         return -1
 
-MST
+MST (Prim's)
 def minimum_spanning_tree(adj):
     n = len(adj)
     visited = [False] * n
@@ -184,4 +184,46 @@ def minimum_spanning_tree(adj):
                 heapq.heappush(min_heap, (edge_weight, neighbor))
     
     return mst_weight
+union-find:
+def find(par, x):
+    if par[x] != x:
+        par[x] = find(par, par[x])  # Path compression
+    return par[x]
+
+def unionSet(par, x, z):
+    x_root = find(par, x)
+    z_root = find(par, z)
+    if x_root != z_root:
+        par[x_root] = z_root
+MST(kruskal's)
+class DisjointSet:
+    def __init__(self, size):
+        self.parent = [i for i in range(size)]
+    
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+    
+    def union(self, x, y):
+        x_root = self.find(x)
+        y_root = self.find(y)
+        if x_root != y_root:
+            self.parent[y_root] = x_root
+
+def kruskal_mst(edges, num_vertices):
+    edges.sort(key=lambda x: x[2])  # Sort edges by weight
+    ds = DisjointSet(num_vertices)
+    mst = []
+    
+    for u, v, weight in edges:
+        if ds.find(u) != ds.find(v):
+            ds.union(u, v)
+            mst.append((u, v, weight))
+            if len(mst) == num_vertices - 1:
+                break
+    
+    return mst
+
+
 
