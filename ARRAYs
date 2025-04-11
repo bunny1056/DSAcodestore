@@ -1,0 +1,38 @@
+Maximum index
+# Python program to find the maximum
+# j - i such that arr[i] <= arr[j]
+
+# Function to find the maximum
+# j - i such that arr[i] <= arr[j]
+def maxIndexDiff(arr):
+    n = len(arr)
+    rMax = [0] * n
+    i, j = 0, 0
+    lMin = arr[0]
+    
+    # rMax[i] stores the maximum value
+    # in the range [i, n-1]
+    rMax[n - 1] = arr[n - 1]
+    for i in range(n - 2, -1, -1):
+        rMax[i] = max(rMax[i + 1], arr[i])
+    
+    i, j, ans = 0, 0, 0
+    
+    while i < n and j < n:
+        
+        # Compare with answer and increment j.
+        if lMin <= rMax[j]:
+            ans = max(ans, j - i)
+            j += 1
+        
+        # Else, increment i.
+        else:
+            i += 1
+            if i + 1 < n:
+                lMin = min(lMin, arr[i])
+    
+    return ans
+
+if __name__ == "__main__":
+    arr = [34, 8, 10, 3, 2, 80, 30, 33, 1]
+    print(maxIndexDiff(arr))
