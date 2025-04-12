@@ -1,0 +1,6 @@
+def RLroottraversal(t):
+  if t != None:
+    traversal(t.right)
+    traversal(t.left)
+    print(t.value, end = '')
+traversal(root)
