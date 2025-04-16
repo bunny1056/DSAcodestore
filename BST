@@ -190,3 +190,62 @@ def verticalTraversal(root):
 
     # Extract the result columns in order
     return [res[x] for x in sorted(res)]
+
+views of trees
+Topdef topView(root):
+    if not root:
+        return []
+
+    queue = deque([(root, 0)])  # node, column
+    top_nodes = {}
+
+    while queue:
+        node, col = queue.popleft()
+        if col not in top_nodes:
+            top_nodes[col] = node.val
+        if node.left:
+            queue.append((node.left, col - 1))
+        if node.right:
+            queue.append((node.right, col + 1))
+
+    return [top_nodes[col] for col in sorted(top_nodes)]
+
+Bottom
+def bottomView(root):
+    if not root:
+        return []
+
+    queue = deque([(root, 0)])
+    bottom_nodes = {}
+
+    while queue:
+        node, col = queue.popleft()
+        bottom_nodes[col] = node.val  # overwrite
+        if node.left:
+            queue.append((node.left, col - 1))
+        if node.right:
+            queue.append((node.right, col + 1))
+
+    return [bottom_nodes[col] for col in sorted(bottom_nodes)]
+
+left or right
+def leftView(root):
+    if not root:
+        return []
+
+    result = []
+    queue = deque([root])
+
+    while queue:
+        level_size = len(queue)
+        for i in range(level_size):
+            node = queue.popleft()
+            if i == 0:  (((( if i == level_size - 1 #for right_view))))
+                result.append(node.val)  # first node at this level
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+
+    return result
+
