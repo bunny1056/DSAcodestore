@@ -1,2 +1,6 @@
 BFS traversal
 Queue can store positions
+
+res = defaultdict(list)
+This creates a dictionary where each key (a column index) maps to a list.
+defaultdict from the collections module automatically creates an empty list if a key doesn’t exist when you try to access it.
