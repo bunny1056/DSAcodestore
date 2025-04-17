@@ -7,3 +7,5 @@ defaultdict from the collections module automatically creates an empty list if a
 
 def L_sym(arr):
             return arr == arr[::-1]
+
+for maintaining visited list use set for O(1) lookup
