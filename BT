@@ -521,3 +521,72 @@ class Codec:
             index += 1
         return root
 
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def morris_preorder(root):
+    res = []
+    current = root
+    
+    while current:
+        if not current.left:
+            res.append(current.val)  # Visit
+            current = current.right
+        else:
+            # Find inorder predecessor
+            pred = current.left
+            while pred.right and pred.right != current:
+                pred = pred.right
+            
+            if not pred.right:  # First visit, create threaded link
+                res.append(current.val)  # Visit (preorder)
+                pred.right = current
+                current = current.left
+            else:  # Second visit, remove threaded link
+                pred.right = None
+                current = current.right
+    return res
+def morris_inorder(root):
+    current = root
+    while current:
+        if current.left is None:
+            print(current.val, end=" ")
+            current = current.right
+        else:
+            # Find the inorder predecessor
+            predecessor = current.left
+            while predecessor.right and predecessor.right != current:
+                predecessor = predecessor.right
+
+            if predecessor.right is None:
+                predecessor.right = current  # Threading
+                current = current.left
+            else:
+                predecessor.right = None  # Remove thread
+                print(current.val, end=" ")
+                current = current.right
+
+Flatten Binary Tree
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def flatten(root):
+    current = root
+    while current:
+        if current.left:
+            # Find the rightmost node in the left subtree
+            pred = current.left
+            while pred.right:
+                pred = pred.right
+            # Rewire connections
+            pred.right = current.right
+            current.right = current.left
+            current.left = None
+        # Move to the next node
+        current = current.right
