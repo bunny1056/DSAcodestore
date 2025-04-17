@@ -439,3 +439,85 @@ def start_node(root,start):
                 return left
             return start_node(root.right,start)
         target = start_node(root,start)
+
+build binary tree from preorder and in_order
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        # Create a hashmap to store value -> index for quick lookup in inorder
+        inorder_index_map = {value: idx for idx, value in enumerate(inorder)}
+        
+        # Pointer to keep track of root in preorder list
+        self.preorder_index = 0 
+
+        def helper(left: int, right: int) -> Optional[TreeNode]:
+            # If there are no elements to construct the subtree
+            if left > right:
+                return None
+
+            # Select preorder_index element as the root and increment it
+            root_val = preorder[self.preorder_index]
+            self.preorder_index += 1
+            root = TreeNode(root_val)
+
+            # Build left and right subtree
+            # excluding inorder_index_map[root_val] element because it's the root
+            root.left = helper(left, inorder_index_map[root_val] - 1)
+            root.right = helper(inorder_index_map[root_val] + 1, right)
+
+            return root
+
+        return helper(0, len(inorder) - 1)
+for postorder start post_order index = -1 and construct root.right first
+
+serialize and deserialize (important)
+from collections import deque
+class Codec:
+
+    def serialize(self, root):
+        """Encodes a tree to a single string.
+        
+        :type root: TreeNode
+        :rtype: str
+        """
+        if not root:
+            return ""
+        queue = deque([root])
+        serialized = []
+        while queue:
+            node = queue.popleft()
+            if node:
+                serialized.append(str(node.val))
+                queue.append(node.left)
+                queue.append(node.right)
+            else:
+                serialized.append("null")
+        # Remove trailing nulls to minimize the string
+        while serialized and serialized[-1] == "null":
+            serialized.pop()
+        return ",".join(serialized)
+        
+
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: TreeNode
+        """
+        if not data:
+            return None
+        values = data.split(',')
+        root = TreeNode(int(values[0]))
+        queue = deque([root])
+        index = 1
+        while queue and index < len(values):
+            node = queue.popleft()
+            if index < len(values) and values[index] != "null":
+                node.left = TreeNode(int(values[index]))
+                queue.append(node.left)
+            index += 1
+            if index < len(values) and values[index] != "null":
+                node.right = TreeNode(int(values[index]))
+                queue.append(node.right)
+            index += 1
+        return root
+
