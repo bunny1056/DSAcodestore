@@ -9,3 +9,7 @@ def L_sym(arr):
             return arr == arr[::-1]
 
 for maintaining visited list use set for O(1) lookup
+inorder_index_map = {value: idx for idx, value in enumerate(inorder)} O(1) lookup
+inorder_index_map = {9: 0,3: 1,15: 2,20: 3,7: 4}
+
+
