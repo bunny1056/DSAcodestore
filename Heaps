@@ -153,3 +153,78 @@ class Solution:
 The elif ensures that only one balancing operation is performed per insertion, keeping the heaps correctly balanced and maintaining the efficiency of the median calculation. Using elif instead of two separate if statements prevents redundant operations and ensures the heaps are always in a valid state after each insertion.
 
 The elif ensures that only one balancing operation is performed per insertion, keeping the heaps correctly balanced and maintaining the efficiency of the median calculation. Using elif instead of two separate if statements prevents redundant operations and ensures the heaps are always in a valid state after each insertion.
+import heapq
+
+def findMedian(arr):
+    max_heap = []  # stores the smaller half, using max heap (simulated with min heap and negative values)
+    min_heap = []  # stores the larger half, using min heap
+    medians = []
+    
+    for num in arr:
+        if not max_heap or num <= -max_heap[0]:
+            heapq.heappush(max_heap, -num)
+        else:
+            heapq.heappush(min_heap, num)
+        
+        # Balance the heaps
+        if len(max_heap) > len(min_heap) + 1:
+            val = -heapq.heappop(max_heap)
+            heapq.heappush(min_heap, val)
+        elif len(min_heap) > len(max_heap):
+            val = heapq.heappop(min_heap)
+            heapq.heappush(max_heap, -val)
+        
+        # Calculate median
+        if len(max_heap) == len(min_heap):
+            median = (-max_heap[0] + min_heap[0]) / 2.0
+        else:
+            median = -max_heap[0] * 1.0
+        medians.append(median)
+    
+    return medians
+
+def isHeap(self, root):
+        # code Here
+        if not root:
+            return True
+        Q = deque([root])
+        flag = False
+        
+        while Q:
+            node = Q.popleft()
+            left_child, right_child = 0, 0
+            if node.left:
+                if flag:
+                    return False
+                left_child = node.left.data
+                if node.data < left_child:
+                    return False
+                Q.append(node.left)
+            else:
+                flag = True
+            
+            if node.right:
+                if flag:
+                    return False
+                right_child = node.right.data
+                if node.data < right_child:
+                    return False
+                Q.append(node.right)
+            else:
+                flag = True
+        return True
+import heapq
+
+def minSum(self, arr):
+    heapq.heapify(arr)
+    num1 = 0
+    num2 = 0
+    flag = True
+    while arr:
+        val = heapq.heappop(arr)
+        if flag:
+            num1 = num1 * 10 + val
+        else:
+            num2 = num2 * 10 + val
+        flag = not flag
+    return num1 + num2          
