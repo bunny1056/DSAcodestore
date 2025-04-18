@@ -181,3 +181,57 @@ def predecessor(root, p):
         else:
             root = root.left
     return pred
+
+TwoSum in BST
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def findTarget(self, root: Optional[TreeNode], k: int) -> bool:
+        seen = set()
+        stack = []
+        current = root
+        
+        while stack or current:
+            while current:
+                stack.append(current)
+                current = current.left
+            current = stack.pop()
+            complement = k - current.val
+            if complement in seen:
+                return True
+            seen.add(current.val)
+            current = current.right
+        return False
+
+def recoverTree(self, root: Optional[TreeNode]) -> None:
+        """
+        Do not return anything, modify root in-place instead.
+        """
+        
+        stack = []
+        current = root
+        prev = None
+        first = None
+        second = None
+        
+        while stack or current:
+            while current:
+                stack.append(current)
+                current = current.left
+            current = stack.pop()
+            
+            if prev and prev.val > current.val:
+                if not first:
+                    first = prev
+                second = current      
+            prev = current
+            current = current.right
+        if first and second:
+            first.val, second.val = second.val, first.val
+        return 
+        
