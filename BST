@@ -39,34 +39,7 @@ Floor/Ceil in BST
                 root = root.left  # Search left for a smaller value
         return floor
 
-delete a Node
-if not root:
-            return root
-        
-        if key < root.val:
-            root.left = self.deleteNode(root.left, key)
-        elif key > root.val:
-            root.right = self.deleteNode(root.right, key)
-        else:
-            # Node with only one child or no child
-            if not root.left:
-                return root.right
-            elif not root.right:
-                return root.left
-            
-            # Node with two children: Get the inorder successor (smallest in the right subtree)
-            if root.right:
-                temp = self.findMin(root.right)
-                root.val = temp.val
-                root.right = self.deleteNode(root.right, temp.val)
-            else:
-                # If right subtree is empty, get the inorder predecessor (largest in the left subtree)
-                temp = self.findMax(root.left)
-                root.val = temp.val
-                root.left = self.deleteNode(root.left, temp.val)
-        
-        return root
-    
+
     def findMin(self, node):
         current = node
         while current.left:
@@ -139,3 +112,72 @@ def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -
                 root = root.left
             else:
                 return root
+BSTfrompreorder
+def bstFromPreorder(self, preorder: List[int]) -> Optional[TreeNode]:
+        if not preorder:
+            return None        
+        root = TreeNode(preorder[0])
+        i = 1
+        while i < len(preorder) and preorder[i] < root.val:
+            i += 1    
+        root.left = self.bstFromPreorder(preorder[1:i])
+        root.right = self.bstFromPreorder(preorder[i:])
+        return root
+Explanation
+
+def search(root, val):
+    while root:
+        if root.val == val:
+            return root
+        elif val < root.val:
+            root = root.left
+        else:
+            root = root.right
+    return None  # Not found
+
+def insert(root, val):
+    if not root:
+        return TreeNode(val)
+    if val < root.val:
+        root.left = insert(root.left, val)
+    else:
+        root.right = insert(root.right, val)
+    return root
+
+def delete(root, val):
+    if not root:
+        return root
+    if val < root.val:
+        root.left = delete(root.left, val)
+    elif val > root.val:
+        root.right = delete(root.right, val)
+    else:
+        if not root.left:
+            return root.right
+        elif not root.right:
+            return root.left
+        # Node with two children: Get in-order successor
+        temp = find_min(root.right)
+        root.val = temp.val
+        root.right = delete(root.right, temp.val)
+    return root
+
+def successor(root, p):
+    succ = None
+    while root:
+        if p.val < root.val:
+            succ = root
+            root = root.left
+        else:
+            root = root.right
+    return succ.val if succ else -1
+
+def predecessor(root, p):
+    pred = None
+    while root:
+        if p.val > root.val:
+            pred = root
+            root = root.right
+        else:
+            root = root.left
+    return pred
