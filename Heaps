@@ -1,0 +1,155 @@
+# Heapify function to maintain the Max-Heap property
+def heapify(arr, n, i):
+    largest = i          # Initialize largest as the root
+    left = 2 * i + 1     # Left child index
+    right = 2 * i + 2    # Right child index
+
+    # Check if left child exists and is greater than root
+    if left < n and arr[left] > arr[largest]:
+        largest = left
+
+    # Check if right child exists and is greater than current largest
+    if right < n and arr[right] > arr[largest]:
+        largest = right
+
+    # If largest is not the root, swap and recursively heapify the affected subtree
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]  # Swap
+        heapify(arr, n, largest)  # Recursively heapify the subtree
+
+# Function to build a Max-Heap from an array
+def build_max_heap(arr):
+    n = len(arr)
+    # Start from the last non-leaf node (since leaf nodes are already heapified)
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+    return arr
+def heap_sort(arr):
+    n = len(arr)
+    # Build max-heap
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+    # Extract elements one by one
+    for i in range(n - 1, 0, -1):
+        arr[0], arr[i] = arr[i], arr[0]  # Swap root (max) with last element
+        heapify(arr, i, 0)  # Heapify reduced heap
+    return arr
+
+kLargest
+import heapq
+
+def kLargest(arr, k):
+    # Python's heapq module only provides min-heap, so we invert the values to simulate a max-heap
+    max_heap = [-x for x in arr]
+    heapq.heapify(max_heap) ## if we return -x for x in max_heap it will be max_heap
+    result = []
+    for _ in range(k):
+        if max_heap:
+            result.append(-heapq.heappop(max_heap))
+    return result
+
+merge K sorted arrays
+import heapq
+def mergeKArrays(self, arr, K):
+    min_heap = []
+    # Push the first element of each array into the heap
+    for i in range(K):
+        if arr[i]:  # Ensure the array is not empty
+            heapq.heappush(min_heap, (arr[i][0], i, 0))
+    
+    merged = []
+    while min_heap:
+        val, arr_idx, elem_idx = heapq.heappop(min_heap)
+        merged.append(val)
+        if elem_idx + 1 < K:  # Since each array is of size K
+            next_val = arr[arr_idx][elem_idx + 1]
+            heapq.heappush(min_heap, (next_val, arr_idx, elem_idx + 1))
+    
+    return merged
+
+REorganize string
+import heapq
+from collections import Counter
+
+def reorganizeString(s):
+    # Count the frequency of each character
+    count = Counter(s) ##count = {'a': 2, 'b': 1}
+    # Create a max-heap based on frequency (using negative values for max-heap simulation)
+    max_heap = [(-freq, char) for char, freq in count.items()]
+    heapq.heapify(max_heap)  
+    res = []
+    prev_freq, prev_char = 0, ''
+    
+    while max_heap:
+        # Pop the character with the highest remaining frequency
+        freq, char = heapq.heappop(max_heap)
+        res.append(char)
+        
+        # Push the previous character back into the heap if its count is still positive
+        if prev_freq < 0:
+            heapq.heappush(max_heap, (prev_freq, prev_char))
+        # Update previous character and its frequency (decreased by 1)
+        prev_freq, prev_char = freq + 1, char
+    # Check if the result length matches the input string length
+    return ''.join(res) if len(res) == len(s) else "" ##res = ['a', 'b', 'a'] → ''.join(res) = "aba".
+
+ merge sorted linked lists
+def mergeKLists(self, arr):
+        # code here
+        # return head of merged list
+        min_heap = []
+        for i in range(len(arr)):
+            if arr[i]:
+                heapq.heappush(min_heap,(arr[i].data,arr[i]))
+        res = []
+        while min_heap:
+            val, pointer = heapq.heappop(min_heap)
+            res.append(val)
+            if pointer.next:
+                pointer = pointer.next
+                next_val = pointer.data
+                heapq.heappush(min_heap,(next_val,pointer))
+        root = Node(res[0])
+        curr = root
+        i = 1
+        while i < len(res):
+            curr.next = Node(res[i])
+            curr = curr.next
+            i = i+1
+        return root
+            
+smallestrangeinKLists
+import heapq
+class Solution:
+    def smallestRange(self, KSortedArray, n, k):
+        current_max = -float('inf')
+        min_heap = []
+        # Initialize the heap with the first element of each list
+        for i in range(k):
+            if KSortedArray[i]:
+                heapq.heappush(min_heap, (KSortedArray[i][0], i, 0))
+                current_max = max(current_max, KSortedArray[i][0])
+        
+        min_range = float('inf')
+        range_start, range_end = -1, -1
+        
+        # Loop until the heap has at least one element from each list
+        while len(min_heap) == k:  # Fix: Ensure all lists are represented
+            current_min, arr_idx, elem_idx = heapq.heappop(min_heap)
+            # Update the smallest range if a smaller range is found
+            if current_max - current_min < min_range:
+                min_range = current_max - current_min
+                range_start = current_min
+                range_end = current_max
+            # Move to the next element in the same list
+            if elem_idx + 1 < n:
+                next_val = KSortedArray[arr_idx][elem_idx + 1]
+                heapq.heappush(min_heap, (next_val, arr_idx, elem_idx + 1))
+                current_max = max(current_max, next_val)
+            else:
+                # If any list is exhausted, break the loop
+                break
+        return (range_start, range_end)
+The elif ensures that only one balancing operation is performed per insertion, keeping the heaps correctly balanced and maintaining the efficiency of the median calculation. Using elif instead of two separate if statements prevents redundant operations and ensures the heaps are always in a valid state after each insertion.
+
+The elif ensures that only one balancing operation is performed per insertion, keeping the heaps correctly balanced and maintaining the efficiency of the median calculation. Using elif instead of two separate if statements prevents redundant operations and ensures the heaps are always in a valid state after each insertion.
