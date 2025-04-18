@@ -228,3 +228,119 @@ def minSum(self, arr):
             num2 = num2 * 10 + val
         flag = not flag
     return num1 + num2          
+
+task scheduler with cooldown of n
+import heapq
+from collections import Counter, deque
+
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+        count = Counter(tasks)
+        max_heap = [(-freq, char) for char, freq in count.items()]
+        heapq.heapify(max_heap)
+
+        time = 0
+        cooldown = deque()
+
+        while max_heap or cooldown:
+            time += 1
+
+            if max_heap:
+                freq, char = heapq.heappop(max_heap)
+                remaining_freq = freq + 1  # Since freq is negative, this decreases the count
+                if remaining_freq < 0:  # If there are remaining tasks
+                    cooldown.append((remaining_freq, char, time + n))
+
+            if cooldown and cooldown[0][2] == time:
+                freq, char, _ = cooldown.popleft()
+                heapq.heappush(max_heap, (freq, char))
+
+        return time
+
+consecutive cards
+import heapq
+from collections import defaultdict
+
+class Solution:
+    def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
+        if len(hand) % groupSize != 0:
+            return False
+        
+        count = defaultdict(int)
+        for num in hand:
+            count[num] += 1
+        
+        min_heap = list(count.keys())
+        heapq.heapify(min_heap)
+        
+        while min_heap:
+            first = min_heap[0]
+            for i in range(first, first + groupSize):
+                if count[i] == 0:
+                    return False
+                count[i] -= 1
+                if count[i] == 0:
+                    if i != heapq.heappop(min_heap):
+                        return False
+        return True
+
+DEsign twitter
+import heapq
+from collections import defaultdict
+
+class Twitter:
+    def __init__(self):
+        self.timestamp = 0
+        self.user_tweets = defaultdict(list)  # userId: list of (timestamp, tweetId)
+        self.user_following = defaultdict(set)  # userId: set of followeeId
+
+    def postTweet(self, userId: int, tweetId: int) -> None:
+        self.user_tweets[userId].append((self.timestamp, tweetId))
+        self.timestamp += 1
+
+    def getNewsFeed(self, userId: int) -> List[int]:
+        tweets = []
+        # Add user's own tweets
+        tweets.extend(self.user_tweets[userId])
+        # Add tweets from followees
+        for followeeId in self.user_following[userId]:
+            tweets.extend(self.user_tweets[followeeId])
+        # Get top 10 most recent tweets
+        tweets.sort(reverse=True, key=lambda x: x[0])
+        return [tweetId for (timestamp, tweetId) in tweets[:10]]
+
+    def follow(self, followerId: int, followeeId: int) -> None:
+        if followerId != followeeId:
+            self.user_following[followerId].add(followeeId)
+
+    def unfollow(self, followerId: int, followeeId: int) -> None:
+        if followeeId in self.user_following[followerId]:
+            self.user_following[followerId].remove(followeeId)
+
+Maximum Sum Combination
+import heapq
+
+def max_sum_combinations(A, B, K):
+    A.sort(reverse=True)
+    B.sort(reverse=True)
+    max_heap = []
+    visited = set()
+    heapq.heappush(max_heap, (-(A[0] + B[0]), (0, 0))
+    visited.add((0, 0))
+    result = []
+    
+    for _ in range(K):
+        if not max_heap:
+            break
+        current_sum, (i, j) = heapq.heappop(max_heap)
+        result.append(-current_sum)
+        
+        if i + 1 < len(A) and (i + 1, j) not in visited:
+            heapq.heappush(max_heap, (-(A[i + 1] + B[j]), (i + 1, j))
+            visited.add((i + 1, j))
+        
+        if j + 1 < len(B) and (i, j + 1) not in visited:
+            heapq.heappush(max_heap, (-(A[i] + B[j + 1]), (i, j + 1))
+            visited.add((i, j + 1))
+    
+    return result
