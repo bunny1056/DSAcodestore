@@ -1,0 +1,102 @@
+The key observation here is that in a BST, an in-order traversal yields the nodes in ascending order.
+def searchBST(self, root: Optional[TreeNode], val: int) -> Optional[TreeNode]:
+    def helper(node, val):
+        if not node:
+            return None  # Base case: value not found
+        if node.val == val:
+            return node  # Base case: value found
+        if val < node.val:
+            return helper(node.left, val)  # Propagate result from left subtree
+        else:
+            return helper(node.right, val)  # Propagate result from right subtree
+    
+    return helper(root, val)  # Initiate search and return result
+
+    def getMinimumDifference(self, root: Optional[TreeNode]) -> int:
+        def inorder(node):
+            if not node:
+                return []
+            return inorder(node.left) + [node.val] + inorder(node.right)
+        
+        values = inorder(root)
+        min_diff = float('inf')
+        for i in range(1, len(values)):
+            diff = values[i] - values[i-1]
+            if diff < min_diff:
+                min_diff = diff
+        return min_diff
+
+Floor/Ceil in BST
+        key = x
+        floor = -1
+        while root:
+            if root.data == key:
+                return root.data
+            elif root.data < key:
+                floor = root.data  # Update floor
+                root = root.right  # Search right for a larger floor
+            else:
+                root = root.left  # Search left for a smaller value
+        return floor
+
+delete a Node
+if not root:
+            return root
+        
+        if key < root.val:
+            root.left = self.deleteNode(root.left, key)
+        elif key > root.val:
+            root.right = self.deleteNode(root.right, key)
+        else:
+            # Node with only one child or no child
+            if not root.left:
+                return root.right
+            elif not root.right:
+                return root.left
+            
+            # Node with two children: Get the inorder successor (smallest in the right subtree)
+            if root.right:
+                temp = self.findMin(root.right)
+                root.val = temp.val
+                root.right = self.deleteNode(root.right, temp.val)
+            else:
+                # If right subtree is empty, get the inorder predecessor (largest in the left subtree)
+                temp = self.findMax(root.left)
+                root.val = temp.val
+                root.left = self.deleteNode(root.left, temp.val)
+        
+        return root
+    
+    def findMin(self, node):
+        current = node
+        while current.left:
+            current = current.left
+        return current
+    
+    def findMax(self, node):
+        current = node
+        while current.right:
+            current = current.right
+        return current
+
+def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+    count = 0
+    def dfs(node: Optional[TreeNode]) -> int:
+        if not node:
+            return None
+
+        value = dfs(node.left)
+        if value is not None:
+            return value
+
+        nonlocal count
+        count += 1
+        if count == k:
+            return node.val
+
+        value = dfs(node.right)
+        if value is not None:
+            return value
+
+        return None
+    return dfs(root)
