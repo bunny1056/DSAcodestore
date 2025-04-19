@@ -33,6 +33,39 @@ def maxIndexDiff(arr):
     
     return ans
 
-if __name__ == "__main__":
-    arr = [34, 8, 10, 3, 2, 80, 30, 33, 1]
-    print(maxIndexDiff(arr))
+def second_largest(arr):
+    first = second = float('-inf')
+    for num in arr:
+        if num > first:
+            second = first
+            first = num
+        elif num > second and num != first:
+            second = num
+    return second if second != float('-inf') else -1
+
+sorted and rotated
+def check(nums):
+    n = len(nums)
+    if n <= 1:
+        return True  # An array with 0 or 1 element is trivially rotated sorted
+    
+    pivot = 0
+    # Find the pivot where the order decreases
+    for i in range(n - 1):
+        if nums[i] > nums[i + 1]:
+            pivot = i + 1
+            break
+    
+    # Check if the array is already fully sorted (no pivot found)
+    if pivot == 0:
+        return True
+    
+    # Check if the remaining elements after pivot are sorted
+    # and the last element is <= first element
+    is_sorted = True
+    for i in range(pivot, n - 1):
+        if nums[i] > nums[i + 1]:
+            is_sorted = False
+            break
+    
+    return is_sorted and (nums[-1] <= nums[0])
