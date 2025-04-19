@@ -16,4 +16,5 @@ in BTs
 write conditions for current node
 left and right will be recursions!! or in fxns
 
+L[::-1] to print reverse
 
