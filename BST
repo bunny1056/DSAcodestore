@@ -235,3 +235,22 @@ def recoverTree(self, root: Optional[TreeNode]) -> None:
             first.val, second.val = second.val, first.val
         return 
         
+class Solution:
+    def largestBst(self, root):
+        def helper(node):
+            if not node:
+                return (True, 0, float('inf'), float('-inf'))  # is_bst, size, min, max
+            
+            left_is_bst, left_size, left_min, left_max = helper(node.left)
+            right_is_bst, right_size, right_min, right_max = helper(node.right)
+            
+            if left_is_bst and right_is_bst and left_max < node.data and right_min > node.data:
+                size = left_size + right_size + 1
+                current_min = min(left_min, node.data)
+                current_max = max(right_max, node.data)
+                return (True, size, current_min, current_max)
+            else:
+                return (False, max(left_size, right_size), 0, 0)
+        
+        is_bst, size, _, _ = helper(root)
+        return size
