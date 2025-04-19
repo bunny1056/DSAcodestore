@@ -1,0 +1,113 @@
+ Basic Patterns
+(a) Right Triangle Star Pattern
+*
+**
+***
+****
+*****
+def pattern1(n):
+    for i in range(1, n+1):
+        for j in range(1, i+1):
+            print(j, end=' ')
+        print()
+
+Inverted Right Triangle (Stars)
+* * * *
+* * *
+* *
+*
+python
+def pattern2(n):
+    for i in range(n, 0, -1):
+        print('* ' * i)
+
+Diamond Pattern (Stars)
+  *
+ ***
+*****
+ ***
+  *
+python
+def pattern3(n):
+    # Upper half
+    for i in range(1, n+1, 2):
+        print(('*' * i).center(n))
+    # Lower half
+    for i in range(n-2, 0, -2):
+        print(('*' * i).center(n))
+
+ Number Pyramid
+    1
+   2 2
+  3 3 3
+ 4 4 4 4
+5 5 5 5 5
+python
+def pattern4(n):
+    for i in range(1, n+1):
+        print(' '*(n-i) + (str(i)+' ')*i)
+
+Hollow Square
+*****
+*   *
+*   *
+*   *
+*****
+python
+def pattern5(n):
+    for i in range(n):
+        for j in range(n):
+            if i==0 or i==n-1 or j==0 or j==n-1:
+                print('*', end='')
+            else:
+                print(' ', end='')
+        print()
+
+Floyd's Triangle
+1
+2 3
+4 5 6
+7 8 9 10
+python
+def pattern6(n):
+    num = 1
+    for i in range(1, n+1):
+        for j in range(1, i+1):
+            print(num, end=' ')
+            num += 1
+        print()
+
+Pascal's Triangle
+    1
+   1 1
+  1 2 1
+ 1 3 3 1
+1 4 6 4 1
+python
+def pattern7(n):
+    for i in range(n):
+        # Print leading spaces
+        print(' '*(n-i), end='')
+        # Compute and print values
+        val = 1
+        for j in range(0, i+1):
+            print(val, end=' ')
+            val = val * (i - j) // (j + 1)
+        print()
+
+Binary Number Triangle
+1
+0 1
+1 0 1
+0 1 0 1
+python
+def pattern8(n):
+    for i in range(1, n+1):
+        for j in range(1, i+1):
+            print((i+j+1)%2, end=' ')
+        print()
+Key Techniques Used:
+Nested loops (outer for rows, inner for columns)
+String multiplication and centering
+Mathematical patterns (Floyd's, Pascal's)
+Conditional printing (hollow patterns)
