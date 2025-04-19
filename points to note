@@ -18,3 +18,28 @@ left and right will be recursions!! or in fxns
 
 L[::-1] to print reverse
 
+count frequencies
+from collections import Counter
+array = [1, 4, 6, 3, 3, 5, 5, 4, 5, 3]
+count = Counter(array)
+print(count)
+
+keys = my_dict.keys()  # Returns a view object (dict_keys)        # Output: dict_keys(['a', 'b', 'c'])
+print(list(keys))
+keys = [key for key in my_dict]  # ['a', 'b', 'c']
+# OR
+keys = list(my_dict)             # ['a', 'b', 'c']
+
+values = [my_dict[key] for key in my_dict] 
+#or
+values = my_dict.values()  # Returns a view object 
+print(list(values)) 
+
+# Add a new key 'c' with value 3
+my_dict['c'] = 3
+
+
+
+
+
+
