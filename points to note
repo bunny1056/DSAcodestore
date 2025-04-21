@@ -38,6 +38,11 @@ print(list(values))
 # Add a new key 'c' with value 3
 my_dict['c'] = 3
 
+del arr[1]
+arr.remove(20)
+arr = [10, 20, 30, 40]
+removed = arr.pop(1)
+
 
 
 
