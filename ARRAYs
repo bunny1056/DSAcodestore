@@ -180,4 +180,26 @@ def maxSubArray(nums):
             end = i
 
     return max_sum, nums[start:end+1]
+OR 
+def maxSubArray(nums):
+    max_sum = current_sum = nums[0]
+    for num in nums[1:]:
+        current_sum = max(num, current_sum + num)
+        max_sum = max(max_sum, current_sum)
+    return max_sum
 
+
+Rearrange
+def rearrangeArray(self, nums: List[int]) -> List[int]:
+        p, q = 0, 1
+        n = len(nums)
+        result = [0]*n
+
+        for num in nums:
+            if num > 0:
+                result[p] = num
+                p += 2
+            else:
+                result[q] = num
+                q += 2
+        return result
