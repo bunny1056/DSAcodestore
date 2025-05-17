@@ -127,3 +127,27 @@ def longestSubarrayWithSumK(arr, n, k):
             sum_index[prefix_sum] = i
     
     return max_length
+
+2sum
+ def twoSum(self, nums: List[int], target: int) -> List[int]:
+        index_map = {}  
+        for i,num in enumerate(nums):
+            complement = target - num
+            if complement in index_map:
+                return [i,index_map[complement]]
+            index_map[num] = i
+
+sort colors/ dutch national flag
+def sortColors(nums):
+    low, mid, high = 0, 0, len(nums) - 1
+
+    while mid <= high:
+        if nums[mid] == 0:
+            nums[low], nums[mid] = nums[mid], nums[low]
+            low += 1
+            mid += 1
+        elif nums[mid] == 1:
+            mid += 1
+        else:  # nums[mid] == 2
+            nums[mid], nums[high] = nums[high], nums[mid]
+            high -= 1
