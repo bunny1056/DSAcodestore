@@ -203,3 +203,16 @@ def rearrangeArray(self, nums: List[int]) -> List[int]:
                 result[q] = num
                 q += 2
         return result
+
+Leaders
+def find_leaders(arr):
+    n = len(arr)
+    max_from_right = arr[-1]
+    leaders = [max_from_right]
+    
+    for i in range(n - 2, -1, -1):
+        if arr[i] >= max_from_right:
+            max_from_right = arr[i]
+            leaders.append(max_from_right)
+    
+    return leaders[::-1]  # Reverse to maintain the original order
