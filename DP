@@ -52,10 +52,53 @@ def perfect_sum(arr, target):
 
     return dp[n][target]
 
-logic :
+logic :target sum or given difference
 target = (d + sum(arr))//2
         total_sum = sum(arr)
         if (d + total_sum) % 2 != 0 or (d + total_sum) < 0:
             return 0
+req = (sum(nums)+target) // 2
+        if (sum(nums)+target) % 2 == 1 or sum(nums) < abs(target):
+            return 0
 
+Coin change I
+def coinChange(self, coins: List[int], amount: int) -> int:
+    max_val = amount + 1  # A placeholder for "infinity" (no. of coins can’t exceed amount)
+    dp = [max_val] * (amount + 1)
+    dp[0] = 0  # Base case: 0 coins to make amount 0
 
+    for coin in coins:
+        for x in range(coin, amount + 1):
+            dp[x] = min(dp[x], dp[x - coin] + 1)
+
+    return dp[amount] if dp[amount] != max_val else -1
+Coin change II
+def change(self, amount: int, coins: List[int]) -> int:
+        res = [0] * (amount + 1)
+        res[0] = 1
+        
+        for c in coins:
+            for a in range(c, amount + 1):
+                res[a] += res[a - c]
+
+def knapSack(self, val, wt,capacity):
+        # code here
+        dp = [0]* (capacity+1)
+        for i in range(1, capacity + 1):
+            for j in range(len(val)):
+                if wt[j] <= i:
+                    dp[i] = max(dp[i],dp[i-wt[j]]+val[j])
+        return dp[capacity]      
+        return res[amount]
+Rod cutting
+def cutRod(price):
+    n = len(price)
+    dp = [0] * (n + 1)
+
+    # Find maximum value for all 
+    # rod of length i.
+    for i in range(1, n + 1):
+        for j in range(1, i + 1):
+            dp[i] = max(dp[i], price[j - 1] + dp[i - j])
+
+    return dp[n]
