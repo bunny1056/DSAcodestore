@@ -7,4 +7,55 @@ class Solution:
             return n
         self.memo[n] = self.fib(n-2) + self.fib(n-1)
         return self.memo[n]
-        
+
+Subsets
+def isSubsetSum(arr, n, sum):
+    dp = [[False] * (sum + 1) for _ in range(n + 1)]
+
+    for i in range(n + 1):
+        dp[i][0] = True
+
+    for i in range(1, n + 1):
+        for j in range(1, sum + 1):
+            if arr[i - 1] > j:
+                dp[i][j] = dp[i - 1][j]
+            else:
+                dp[i][j] = dp[i - 1][j] or dp[i - 1][j - arr[i - 1]]
+
+    return dp[n][sum]
+
+What is dp[i - 1][j - arr[i - 1]]?
+The DP table dp[i][j] answers: "Can we make sum j using the first i elements of the array?"
+When we consider the i-th element (which is arr[i - 1] because the array is 0-indexed), we have two choices:
+Exclude it: Check if we can make sum j without it, i.e., dp[i - 1][j].
+Include it: If we use arr[i - 1], it contributes arr[i - 1] to the sum. To reach the target j, we need the remaining sum j - arr[i - 1] to be achievable using the first i - 1 elements.
+dp[i - 1][j - arr[i - 1]] is a boolean that tells us whether it’s possible to form the sum j - arr[i - 1] using only the first i - 1 elements (i.e., excluding the current element).
+If dp[i - 1][j - arr[i - 1]] is True, it means we can make j - arr[i - 1] with some subset of the first i - 1 elements. By adding arr[i - 1] to that subset, we can achieve the total sum j.
+
+def perfect_sum(arr, target):
+    n = len(arr)
+    
+    # Create a DP table where dp[i][j] is the number of subsets from the first i elements that sum to j
+    dp = [[0] * (target + 1) for _ in range(n + 1)]
+
+    # There's one subset (the empty subset) that sums to 0
+    for i in range(n + 1):
+        dp[i][0] = 1
+
+    # Fill the DP table
+    for i in range(1, n + 1):
+        for j in range(target + 1): ## 0 is valid (in coin change qn also)
+            if arr[i - 1] <= j:
+                dp[i][j] = dp[i - 1][j] + dp[i - 1][j - arr[i - 1]]
+            else:
+                dp[i][j] = dp[i - 1][j]
+
+    return dp[n][target]
+
+logic :
+target = (d + sum(arr))//2
+        total_sum = sum(arr)
+        if (d + total_sum) % 2 != 0 or (d + total_sum) < 0:
+            return 0
+
+
