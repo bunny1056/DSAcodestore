@@ -186,6 +186,76 @@ def length_of_lis(nums):
         else:
             sub[i] = num  # Replace to keep subsequence optimal
     return len(sub)
+def lengthOfLIS(nums):
+    if not nums:
+        return 0
+    
+    n = len(nums)
+    dp = [1] * n  # Each element is itself a subsequence of length 1
+    
+    for i in range(1, n):
+        for j in range(i):
+            if nums[i] > nums[j]:
+                dp[i] = max(dp[i], dp[j] + 1)
+    
+    return max(dp)
 
+printLIS
+def printLIS(nums):
+    n = len(nums)
+    if n == 0:
+        return []
+    
+    # Initialize DP and prev arrays
+    dp = [1] * n  # dp[i] = length of LIS ending at nums[i]
+    prev = [-1] * n  # prev[i] = index of previous element in LIS
+    
+    for i in range(1, n):
+        for j in range(i):
+            if nums[i] > nums[j] and dp[i] < dp[j] + 1:
+                dp[i] = dp[j] + 1
+                prev[i] = j  # Update previous index
+    
+    # Find the index of the maximum value in dp (end of LIS)
+    max_len = max(dp)
+    last_idx = dp.index(max_len)
+    
+    # Reconstruct the LIS using prev array
+    lis = []
+    while last_idx != -1:
+        lis.append(nums[last_idx])
+        last_idx = prev[last_idx]
+    
+    return lis[::-1]  # Reverse to get increasing order
+INC+DEC
+def LongestBitonicSequence(self, n : int, nums : List[int]) -> int:
+        # code here
+        arr = nums
+        n = len(arr)
+        if n == 0:
+            return 0
+        if n == 1:
+            return 0
+    
+        # Step 1: Compute LIS (dp_inc)
+        dp_inc = [1] * n
+        for i in range(1, n):
+            for j in range(i):
+                if arr[i] > arr[j] and dp_inc[i] < dp_inc[j] + 1:
+                    dp_inc[i] = dp_inc[j] + 1
+    
+        # Step 2: Compute LDS (dp_dec)
+        dp_dec = [1] * n
+        for i in range(n-2, -1, -1):
+            for j in range(n-1, i, -1):
+                if arr[i] > arr[j] and dp_dec[i] < dp_dec[j] + 1:
+                    dp_dec[i] = dp_dec[j] + 1
+        
+        # Step 3: Compute the longest bitonic subsequence
+        max_length = 0
+        for i in range(n):
+            if dp_inc[i] > 1 and dp_dec[i] > 1:
+                max_length = max(max_length, dp_inc[i] + dp_dec[i] - 1)
+        return max_length
 
 
