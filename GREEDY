@@ -1,1 +1,52 @@
 ratios.sort(reverse=True, key=lambda x: x[0])
+
+Fractional Knapsack
+def fractionalknapsack(self, val, wt, capacity):
+        #code here
+        n = len(val)
+        ratios = []
+        for i in range(n):
+            ratio = val[i]/wt[i]
+            ratios.append((ratio,val[i],wt[i]))
+            
+        ratios.sort(reverse=True, key=lambda x: x[0])
+
+        total_val = 0
+        rem_capacity = capacity
+        
+        for ratio, v, w in ratios:
+            if rem_capacity >= w:
+                total_val += v
+                rem_capacity -= w
+            else:
+                total_val += (v/w) * rem_capacity
+                break
+        return float(total_val)
+Approach2
+import heapq
+
+def fractionalKnapsack(val, wt, capacity):
+    n = len(val)
+    max_heap = []
+    
+    # Push all items into max-heap (using negative ratio for max-heap simulation)
+    for i in range(n):
+        ratio = - (val[i] / wt[i])  # Negative for max-heap
+        heapq.heappush(max_heap, (ratio, wt[i], val[i]))
+    
+    total_val = 0
+    rem_capacity = capacity
+    
+    while max_heap and rem_capacity > 0:
+        ratio, w, v = heapq.heappop(max_heap)
+        ratio = -ratio  # Convert back to positive
+        
+        if rem_capacity >= w:
+            total_val += v
+            rem_capacity -= w
+        else:
+            fraction = rem_capacity / w
+            total_val += fraction * v
+            rem_capacity = 0  # Knapsack is full
+    
+    return float(total_val)
