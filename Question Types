@@ -1,0 +1,23 @@
+Greedy Algorithms:
+
+Use when the problem can be broken down into a series of steps where a locally optimal choice leads to a globally optimal solution.
+
+Examples: Activity selection, Huffman coding, Kruskal's algorithm for MST.
+
+Sorting:
+
+Use when the order of processing elements affects the solution.
+
+Examples: Interval scheduling, meeting rooms, finding pairs with a certain property.
+
+Array Manipulation:
+
+Use when the solution requires dynamic insertion, deletion, or reordering of elements in an array.
+
+Examples: Inserting intervals, merging overlapping intervals.
+
+Rearranging/Scheduling:
+
+Use when the problem involves arranging elements based on certain precedence or constraints.
+
+Examples: Task scheduling, queue reconstruction by height.
