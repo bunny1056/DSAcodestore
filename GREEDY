@@ -1,0 +1,1 @@
+ratios.sort(reverse=True, key=lambda x: x[0])
