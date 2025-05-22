@@ -227,6 +227,39 @@ def printLIS(nums):
         last_idx = prev[last_idx]
     
     return lis[::-1]  # Reverse to get increasing order
+def findNumberOfLIS(nums):
+    n = len(nums)
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+
+    # Initialize arrays for length and count of LIS ending at each index
+    length = [1] * n  # Length of LIS ending at index i
+    count = [1] * n   # Number of LIS of length length[i] ending at index i
+
+    # Compute LIS lengths and counts
+    max_length = 1  # Track maximum LIS length
+    for i in range(1, n):
+        for j in range(i):
+            if nums[i] > nums[j]:  # Strictly increasing
+                if length[j] + 1 > length[i]:
+                    # Found a longer subsequence
+                    length[i] = length[j] + 1
+                    count[i] = count[j]
+                elif length[j] + 1 == length[i]:
+                    # Found another subsequence of the same length
+                    count[i] += count[j]
+        max_length = max(max_length, length[i])
+
+    # Sum counts of all LIS with maximum length
+    total_count = 0
+    for i in range(n):
+        if length[i] == max_length:
+            total_count += count[i]
+
+    return total_count
+
 INC+DEC
 def LongestBitonicSequence(self, n : int, nums : List[int]) -> int:
         # code here
@@ -258,4 +291,162 @@ def LongestBitonicSequence(self, n : int, nums : List[int]) -> int:
                 max_length = max(max_length, dp_inc[i] + dp_dec[i] - 1)
         return max_length
 
+longest common subsequence
+def lcs_tabulation(X, Y):
+    m = len(X)
+    n = len(Y)
+    dp = [[0]*(n+1) for _ in range(m+1)]
+    
+    for i in range(1, m+1):
+        for j in range(1, n+1):
+            if X[i-1] == Y[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    
+    return dp[m][n]
+printLCS
+def print_lcs(X, Y):
+    m = len(X)
+    n = len(Y)
+    dp = [[0]*(n+1) for _ in range(m+1)]
+    
+    # Build the DP table
+    for i in range(1, m+1):
+        for j in range(1, n+1):
+            if X[i-1] == Y[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    
+    # Now trace back to find the LCS
+    i, j = m, n
+    lcs = []
+    while i > 0 and j > 0:
+        if X[i-1] == Y[j-1]:
+            lcs.append(X[i-1])
+            i -= 1
+            j -= 1
+        elif dp[i-1][j] > dp[i][j-1]:
+            i -= 1
+        else:
+            j -= 1
+    return ''.join(reversed(lcs))
+longest common substring
+def longestCommonSubstr(self, s1, s2):
+    m = len(s1)
+    n = len(s2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    max_length = 0
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if s1[i - 1] == s2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+                if dp[i][j] > max_length:
+                    max_length = dp[i][j]
+            else:  # Fix: This should be outside the 'if' block
+                dp[i][j] = 0  # Reset when characters don't match
+    return max_length
+
+def longestPalindromicSubsequence(s: str) -> int:
+    return longestCommonSubsequence(s, s[::-1])
+
+def minInsertionsToPalindrome(s: str) -> int:
+    lps_length = longestCommonSubsequence(s, s[::-1])
+    return len(s) - lps_length
+
+def minInsertionsDeletions(str1: str, str2: str) -> int:
+    lcs_length = longestCommonSubsequence(str1, str2)
+    return len(str1) - lcs_length + len(str2) - lcs_length
+
+def printShortestCommonSupersequence(str1: str, str2: str) -> str:
+    m, n = len(str1), len(str2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if str1[i-1] == str2[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    
+    # Backtrack to construct supersequence
+    scs = []
+    i, j = m, n
+    while i > 0 or j > 0:
+        if i > 0 and j > 0 and str1[i-1] == str2[j-1]:
+            scs.append(str1[i-1])
+            i -= 1
+            j -= 1
+        elif i > 0 and (j == 0 or dp[i-1][j] >= dp[i][j-1]):
+            scs.append(str1[i-1])
+            i -= 1
+        else:
+            scs.append(str2[j-1])
+            j -= 1
+    return "".join(reversed(scs))
+
+def distinctSubsequences(s: str, t: str) -> int:
+    m, n = len(s), len(t)
+    if n > m:
+        return 0
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    for i in range(m + 1):
+        dp[i][0] = 1
+    
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if s[i-1] == t[j-1]:
+                dp[i][j] = dp[i-1][j-1] + dp[i-1][j]
+            else:
+                dp[i][j] = dp[i-1][j]
+
+    return dp[m][n]
+
+edit distance
+def editDistance(word1: str, word2: str) -> int:
+    m, n = len(word1), len(word2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    # Initialize base cases
+    for i in range(m + 1):
+        dp[i][0] = i  # Delete i characters to get empty string
+    for j in range(n + 1):
+        dp[0][j] = j  # Insert j characters to match word2[0:j]
+    
+    # Fill DP table
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if word1[i-1] == word2[j-1]:
+                dp[i][j] = dp[i-1][j-1]  # No operation needed
+            else:
+                dp[i][j] = min(
+                    dp[i-1][j] + 1,   # Delete from word1
+                    dp[i][j-1] + 1,   # Insert from word2
+                    dp[i-1][j-1] + 1  # Replace
+                )
+    
+    return dp[m][n]
+
+Matrix Multiplication
+def matrixChainMultiplication(dimensions: list[int]) -> int:
+    n = len(dimensions) - 1  # Number of matrices
+    dp = [[float('inf')] * n for _ in range(n)]
+    
+    # Base case: single matrix requires no multiplications
+    for i in range(n):
+        dp[i][i] = 0
+    
+    # Length of chain (from 2 to n)
+    for length in range(2, n + 1):
+        for i in range(n - length + 1):
+            j = i + length - 1
+            for k in range(i, j):
+                cost = (dp[i][k] + dp[k+1][j] + 
+                        dimensions[i] * dimensions[k+1] * dimensions[j+1])
+                dp[i][j] = min(dp[i][j], cost)
+    
+    return dp[0][n-1]
 
