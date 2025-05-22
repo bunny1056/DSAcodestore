@@ -45,6 +45,8 @@ removed = arr.pop(1)
 
 sort in descending order wrt first element
 ratios.sort(reverse=True, key=lambda x: x[0])
+coins.sort(reverse=True)  # Sort in descending order
+
 
 
 
