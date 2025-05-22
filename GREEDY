@@ -298,3 +298,19 @@ def job_sequencing(deadline, profit):
     
     return [count, total_profit]
 
+def findOrder(height, infront):
+    # Write your code here.
+    pass
+    people = list(zip(height, infront))
+    # Sort people in descending order of height, and ascending order of infront (though heights are unique)
+    people.sort(key=lambda x: (-x[0], x[1]))
+    
+    result = []
+    for p in people:
+        h, k = p
+        result.insert(k, h)
+    
+    return result
+Sort by Height in Descending Order: First, we sort all people in descending order of their height. For people of the same height, we sort them in ascending order of their "infront" values (though the problem states all heights are unique, so this might not be necessary here).
+
+Insert into the Result List: For each person in the sorted list, we insert them into the result list at the position specified by their "infront" value. This works because all taller people have already been placed, and inserting at the "infront" position ensures that exactly that many taller people are in front of them.
