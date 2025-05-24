@@ -1,0 +1,67 @@
+Reverse LinkedList I
+def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if head is None or head.next is None:
+            return head
+        current = head
+        temp = None
+        while current is not None:
+            next_node = current.next
+            current.next = temp
+            temp = current
+            new_head = current
+            current = next_node
+
+        return new_head
+Reverse LL II
+def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
+    if head is None or head.next is None or left == right:
+        return head
+    
+    dummy = ListNode(0)
+    dummy.next = head
+    prev = dummy
+    
+    # Move prev to the node before the reversal starts
+    for _ in range(left - 1):
+        prev = prev.next
+    
+    current = prev.next
+    for _ in range(right - left):
+        next_node = current.next
+        current.next = next_node.next
+        next_node.next = prev.next
+        prev.next = next_node
+    
+    return dummy.next
+
+Slow and Fast pointers
+def hasCycle(self, head: Optional[ListNode]) -> bool:
+        slow = head
+        fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow == fast:
+                return True
+        return False
+starting point of cycle
+# If no cycle, return None
+        if not fast or not fast.next:
+            return None
+        
+        # Step 2: Find the cycle's starting node
+        slow = head
+        while slow != fast:
+            slow = slow.next
+            fast = fast.next
+        
+        return slow 
+# Step 2: Count the length of the cycle
+        count = 1
+        temp = slow.next
+        while temp != slow:
+            count += 1
+            temp = temp.next
+        return count 
+
+
