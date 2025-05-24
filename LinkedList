@@ -64,4 +64,278 @@ starting point of cycle
             temp = temp.next
         return count 
 
+class Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        if head is None or head.next is None:
+            return True
+        slow, fast = head, head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        
+        current = slow
+        prev = None
 
+        while current:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+        
+        start = head
+        end = prev ###imp_step
+
+        while end:
+            if start.val != end.val:
+                return False
+            start = start.next
+            end = end.next
+        return True
+
+def oddEvenList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if head is None or head.next is None:
+            return head
+        current = head
+        temp = head
+        prev = head.next
+        while current and current.next:
+            current = current.next.next
+            if current is not None:
+                #insertion of node
+                new_node = ListNode(current.val)
+                new_node.next = temp.next
+                temp.next = new_node
+
+                #deletion of node
+                prev.next = current.next
+
+                #adjust pointers
+                current = prev
+                temp = new_node
+                prev = prev.next
+
+        return head  
+
+class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        dummy = ListNode(0)
+        dummy.next = head
+        fast = slow = dummy
+        
+        # Move fast n steps ahead
+        for _ in range(n):
+            fast = fast.next
+        
+        # Move both until fast reaches the end
+        while fast.next:
+            slow = slow.next
+            fast = fast.next
+        
+        # Remove the nth node from the end
+        slow.next = slow.next.next
+        
+        return dummy.next
+
+def deleteMiddle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if head.next==None:
+            return None
+        slow=fast=head
+        while fast and fast.next:
+            a=slow
+            slow=slow.next
+            fast=fast.next.next
+        a.next=slow.next
+        return head
+
+sort a LL
+class Solution:
+    def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head or not head.next:
+            return head
+        
+        # Split the list into two halves
+        slow, fast = head, head.next
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        mid = slow.next
+        slow.next = None
+        
+        # Recursively sort each half
+        left = self.sortList(head)
+        right = self.sortList(mid)
+        
+        # Merge the sorted halves
+        dummy = ListNode(0)
+        current = dummy
+        while left and right:
+            if left.val < right.val:
+                current.next = left
+                left = left.next
+            else:
+                current.next = right
+                right = right.next
+            current = current.next
+        current.next = left if left else right
+        
+        return dummy.next
+
+def segregate(self, head):
+        #code here
+        if not head:
+            return head
+        
+        if not head:
+            return head
+        
+        # Dummy nodes for the three lists
+        dummy_zero = Node(0)
+        dummy_one = Node(0)
+        dummy_two = Node(0)
+        
+        # Current pointers for the three lists
+        zero_tail = dummy_zero
+        one_tail = dummy_one
+        two_tail = dummy_two
+        
+        current = head
+        
+        # Separate the nodes into three lists
+        while current:
+            if current.val == 0:
+                zero_tail.next = current
+                zero_tail = zero_tail.next
+            elif current.val == 1:
+                one_tail.next = current
+                one_tail = one_tail.next
+            else:
+                two_tail.next = current
+                two_tail = two_tail.next
+            current = current.next
+        
+        # Connect the three lists
+        zero_tail.next = dummy_one.next if dummy_one.next else dummy_two.next
+        one_tail.next = dummy_two.next
+        two_tail.next = None
+        
+        return dummy_zero.next
+        
+    def get_intersection_node(head1, head2):
+    if not head1 or not head2:
+        return None
+    
+    ptr1, ptr2 = head1, head2
+
+    while ptr1 != ptr2:
+        ptr1 = ptr1.next if ptr1 else head2
+        ptr2 = ptr2.next if ptr2 else head1
+
+    return ptr1  # Either the intersection node or None
+
+class Solution:
+    def addOne(self, head):
+        # Helper function to reverse the linked list
+        def reverse(head):
+            current = head
+            prev = None
+            while current:
+                next_node = current.next
+                current.next = prev
+                prev = current
+                current = next_node
+            return prev
+        
+        # Reverse the linked list to process from least significant digit
+        head = reverse(head)
+        
+        current = head
+        carry = 1  # Start with adding 1
+        
+        while current:
+            sum_val = current.data + carry
+            carry = sum_val // 10
+            current.data = sum_val % 10
+            
+            # If no more carry, break early
+            if carry == 0:
+                break
+            
+            # Move to the next node, create a new node if necessary
+            if not current.next and carry:
+                current.next = Node(carry)
+                break
+            current = current.next
+        
+        # Reverse the list back to original order
+        return reverse(head)
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class Solution:
+    def addTwoLists(self, l1, l2):
+        dummy = Node(0)
+        current = dummy
+        carry = 0
+
+        while l1 or l2 or carry:
+            val1 = l1.data if l1 else 0
+            val2 = l2.data if l2 else 0
+            total = val1 + val2 + carry
+
+            carry = total // 10
+            new_digit = total % 10
+            current.next = Node(new_digit)
+
+            current = current.next
+            if l1: l1 = l1.next
+            if l2: l2 = l2.next
+
+        return dummy.next
+
+def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+    if not head or not head.next or k == 1:
+        return head
+    
+    def reverse(head, k):
+        prev = None
+        current = head
+        while k > 0:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+            k -= 1
+        return prev
+    
+    dummy = ListNode(0)
+    dummy.next = head
+    prev_group_end = dummy
+    
+    while True:
+        # Check if there are at least k nodes left
+        group_start = prev_group_end.next
+        current = group_start
+        count = 0
+        while current and count < k:
+            current = current.next
+            count += 1
+        
+        if count == k:
+            # Reverse the group
+            reversed_head = reverse(group_start, k)
+            
+            # Connect the previous group to the reversed group
+            prev_group_end.next = reversed_head
+            
+            # Connect the reversed group to the next node
+            group_start.next = current
+            
+            # Update prev_group_end for next iteration
+            prev_group_end = group_start
+        else:
+            break
+    
+    return dummy.next
