@@ -1,0 +1,337 @@
+class Stack:
+    def __init__(self):
+        self.stack = []
+    
+    def push(self, val):
+        self.stack.append(val)
+    
+    def pop(self):
+        if len(self.stack) != 0:
+            return self.stack.pop()
+        return -1
+
+class Queue:
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, val):
+        self.queue.append(val)
+    
+    def dequeue(self):
+        if not self.is_empty():
+            return self.queue.pop(0) ## or popleft()
+        return -1
+
+stack using queue
+from collections import deque
+class MyStack:
+
+    def __init__(self):
+        self.stack = deque()
+
+    def push(self, x: int) -> None:
+        self.stack.append(x)
+        for _ in range(len(self.stack)-1):
+            self.stack.append(self.stack.popleft())
+  def push(self, x: int) -> None:
+        self.q2.append(x)
+        while self.stack:
+            self.q2.append(self.stack.popleft())
+        self.stack, self.q2 = self.q2, self.stack
+  
+    def pop(self) -> int:
+        if len(self.stack) != 0:
+            return self.stack.popleft()
+        return -1
+    
+    def top(self) -> int:
+        if len(self.stack) != 0:
+            return self.stack[0]
+
+
+    def empty(self) -> bool:
+        return len(self.stack) == 0
+
+queue using stack
+class Queue:
+    def __init__(self):
+        self.in_stack = []
+        self.out_stack = []
+    
+    def enqueue(self, val):
+        self.in_stack.append(val)
+    
+    def dequeue(self):
+        if not self.out_stack:
+            while self.in_stack:
+                self.out_stack.append(self.in_stack.pop())
+        if self.out_stack:
+            return self.out_stack.pop()
+        return -1
+    
+    def front(self):
+        if not self.out_stack:
+            while self.in_stack:
+                self.out_stack.append(self.in_stack.pop())
+        if self.out_stack:
+            return self.out_stack[-1]
+        return -1
+    
+    def is_empty(self):
+        return not self.in_stack and not self.out_stack
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+stack using LL
+class MyStack:
+    def __init__(self):
+        self.head = None
+        
+    def push(self, data):
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
+        
+    def pop(self):
+        if self.head is None:
+            return -1  # or raise an exception for empty stack
+            
+        temp = self.head
+        data = temp.data  # Store the data before modification
+        self.head = temp.next
+        temp = None  # Optional - Python will garbage collect
+        return data
+queue using LL
+class Node: 
+    def __init__(self, data): 
+        self.data = data 
+        self.next = None
+        
+class MyQueue:
+    def __init__(self):
+        self.front = None
+        self.rear = None
+    
+    def push(self, item):
+        new_node = Node(item)
+        if self.rear is None:
+            self.front = self.rear = new_node
+        else:
+            self.rear.next = new_node
+            self.rear = new_node
+    
+    def pop(self):
+        if self.front is None:
+            return -1
+        temp = self.front
+        self.front = temp.next
+        if self.front is None:
+            self.rear = None
+        return temp.data
+
+valid parenthesis
+def isValid(s: str) -> bool:
+    stack = []
+    bracket_map = {')': '(', '}': '{', ']': '['}
+    for char in s:
+        if char in bracket_map.values():
+            stack.append(char)
+        elif char in bracket_map.keys():
+            if not stack or stack.pop() != bracket_map[char]:
+                return False
+        else:
+            return False  # Invalid character
+    return not stack
+
+Min_stack
+class MinStack:
+
+    def __init__(self):
+        self.stack = []
+        self.min_stack = []
+
+    def push(self, val: int) -> None:
+        self.stack.append(val)
+        if not self.min_stack or val <= self.min_stack[-1]:
+            self.min_stack.append(val)
+
+    def pop(self) -> None:
+        if self.stack.pop() == self.min_stack[-1]:
+            self.min_stack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+
+    def getMin(self) -> int:
+        return self.min_stack[-1]
+
+Next Greater Element I
+def nextGreaterElement(nums):
+    n = len(nums)
+    result = [-1] * n
+    stack = []
+    
+    for i in range(n):
+        while stack and nums[i] > nums[stack[-1]]:
+            idx = stack.pop()
+            result[idx] = nums[i]
+        stack.append(i)
+    
+    return result
+Next Greater Element II
+def nextGreaterElements(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        result = [-1] * n
+        st = []
+
+        for i in range(2*n):
+            curr = nums[i%n]
+            while st and nums[st[-1]] < curr:
+                ind = st.pop()
+                result[ind] = curr
+            if i < n:
+                st.append(i)
+            
+        return result    
+ def count_NGEs(self, N, arr, queries, indices):
+        # Code here
+        count = [0] * N
+        for i in range(N):
+            for j in range(i+1,N):
+                if arr[j] > arr[i]:
+                    count[i] += 1
+                    
+        res = []
+        for index in indices:
+            res.append(count[index])
+        return res
+
+Trap_water
+def trap(height):
+    if not height:
+        return 0
+    
+    n = len(height)
+    left_max = [0] * n
+    right_max = [0] * n
+    
+    # Compute the left maximum for each position
+    left_max[0] = height[0]
+    for i in range(1, n):
+        left_max[i] = max(left_max[i-1], height[i])
+    
+    # Compute the right maximum for each position
+    right_max[n-1] = height[n-1]
+    for i in range(n-2, -1, -1):
+        right_max[i] = max(right_max[i+1], height[i])
+    
+    # Calculate the trapped water
+    trapped_water = 0
+    for i in range(n):
+        trapped_water += min(left_max[i], right_max[i]) - height[i]
+    
+    return trapped_water
+using stacks
+class Solution:
+    def trap(self, height):
+        stack = []
+        water = 0
+        for i in range(len(height)):
+            while stack and height[i] > height[stack[-1]]:
+                top = stack.pop()
+                if not stack:
+                    break
+                distance = i - stack[-1] - 1
+                bounded_height = min(height[i], height[stack[-1]]) - height[top]
+                water += distance * bounded_height
+            stack.append(i)
+        return water
+
+asteroid collision
+def asteroidCollision(asteroids):
+    stack = []
+
+    for ast in asteroids:
+        while stack and ast < 0 < stack[-1]:  # possible collision
+            if stack[-1] < -ast:
+                stack.pop()
+                continue
+            elif stack[-1] == -ast:
+                stack.pop()
+            break
+        else:
+            stack.append(ast)
+
+    return stack
+
+remove k digits 
+def removeKdigits(num: str, k: int) -> str:
+    stack = []
+    for digit in num:
+        while k > 0 and stack and stack[-1] > digit:
+            stack.pop()
+            k -= 1
+        stack.append(digit)
+    # If k > 0, remove remaining k digits from the end
+    if k > 0:
+        stack = stack[:-k]
+    # Convert stack to string and remove leading zeros
+    result = ''.join(stack).lstrip('0')
+    return result if result else '0'
+
+largest histogram area
+def largestRectangleArea(heights):
+    stack = [-1]
+    max_area = 0
+    for i in range(len(heights)):
+        while stack[-1] != -1 and heights[stack[-1]] >= heights[i]:
+            current_height = heights[stack.pop()]
+            current_width = i - stack[-1] - 1
+            max_area = max(max_area, current_height * current_width)
+        stack.append(i)
+    while stack[-1] != -1:
+        current_height = heights[stack.pop()]
+        current_width = len(heights) - stack[-1] - 1
+        max_area = max(max_area, current_height * current_width)
+    return max_area
+
+Maximal Rectangle
+def maximalRectangle(matrix):
+    if not matrix:
+        return 0
+    
+    rows = len(matrix)
+    cols = len(matrix[0])
+    heights = [0] * cols
+    max_area = 0
+    
+    for row in matrix:
+        for i in range(cols):
+            heights[i] = heights[i] + 1 if row[i] == '1' else 0
+        
+        stack = []
+        for i in range(cols + 1):
+            h = heights[i] if i < cols else 0
+            while stack and heights[stack[-1]] > h:
+                height = heights[stack.pop()]
+                width = i if not stack else i - stack[-1] - 1
+                max_area = max(max_area, height * width)
+            stack.append(i)
+    
+    return max_area
+
+Online stock span design
+class StockSpanner:
+
+    def __init__(self):
+        self.stack = []
+
+    def next(self, price: int) -> int:
+        span = 1
+        while self.stack and self.stack[-1][0] <= price:
+            prev_price, prev_span = self.stack.pop()
+            span += prev_span
+        self.stack.append((price, span))
+        return span
