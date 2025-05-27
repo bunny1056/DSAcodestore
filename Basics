@@ -1,3 +1,48 @@
 def isPalindrome(self, x: int) -> bool:
         s = str(x)
         return s == s[::-1]
+
+def reverse(x):
+    INT_MAX = 2**31 - 1
+    INT_MIN = -2**31
+    
+    reversed_num = 0
+    sign = -1 if x < 0 else 1
+    x = abs(x)
+    
+    while x != 0:
+        digit = x % 10
+        x = x // 10
+        
+        # Check for overflow before adding the digit
+        if sign == 1:
+            if reversed_num > (INT_MAX - digit) // 10:
+                return 0
+        else:
+            if reversed_num > ((INT_MAX + 1) - digit) // 10:
+                return 0
+        
+        reversed_num = reversed_num * 10 + digit
+    
+    return sign * reversed_num
+
+number of digit 1
+def countDigitOne(n: int) -> int:
+    count = 0
+    i = 1  # current digit position, starting from the least significant digit
+    while i <= n:
+        # Split the number into higher, current, and lower parts
+        higher = n // (i * 10)
+        current = (n // i) % 10
+        lower = n % i
+        
+        # Count the number of 1s in the current digit position
+        count += higher * i
+        if current == 1:
+            count += lower + 1
+        elif current > 1:
+            count += i
+        
+        # Move to the next digit position
+        i *= 10
+    return count
