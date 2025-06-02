@@ -184,6 +184,26 @@ def numberOfSubarrays(self, nums: List[int], k: int) -> int:
             sum_index[curr_sum] = sum_index.get(curr_sum,0) + 1
         return count
 
+def numberOfSubstrings(self, s: str) -> int:
+        freq = {}
+        left = 0
+        count = 0
+        n = len(s)
+        
+        for right in range(n):
+            # Add character at right to frequency map
+            freq[s[right]] = freq.get(s[right], 0) + 1
+            
+            # Shrink window until it's no longer valid (less than 3 distinct characters)
+            while len(freq) == 3:
+                count += n - right  # All substrings from left to right or beyond are valid
+                freq[s[left]] -= 1
+                if freq[s[left]] == 0:
+                    del freq[s[left]]
+                left += 1
+        
+        return count
+
 def maxScore(cardPoints, k):
     n = len(cardPoints)
     total_sum = sum(cardPoints)
@@ -202,3 +222,47 @@ def maxScore(cardPoints, k):
         min_window_sum = min(min_window_sum, window_sum)
     
     return total_sum - min_window_sum
+
+longest substrings with K uniques
+def longestKUnique(s: str, k: int) -> int:
+    freq = {}
+    left = 0
+    max_len = 0
+    
+    for right in range(len(s)):
+        # Add character at right to frequency map
+        freq[s[right]] = freq.get(s[right], 0) + 1
+        
+        # Shrink window if more than k distinct characters
+        while len(freq) > k:
+            freq[s[left]] -= 1
+            if freq[s[left]] == 0:
+                del freq[s[left]]
+            left += 1
+        
+        # Update max_len if exactly k distinct characters
+        if len(freq) == k:
+            max_len = max(max_len, right - left + 1)
+    
+    return max_len if max_len >= k else -1
+
+def subarraysWithKDistinct(nums, k):
+    def atMostK(k):
+        freq = {}
+        left = 0
+        count = 0
+        
+        for right in range(len(nums)):
+            freq[nums[right]] = freq.get(nums[right], 0) + 1
+            
+            while len(freq) > k:
+                freq[nums[left]] -= 1
+                if freq[nums[left]] == 0:
+                    del freq[nums[left]]
+                left += 1
+            
+            count += right - left + 1
+        
+        return count
+    
+    return atMostK(k) - atMostK(k - 1)
