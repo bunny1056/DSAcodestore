@@ -5,5 +5,131 @@ def max_subarray_sum(nums):
         max_global = max(max_global, max_current)
     return max_global
 
-# Example
-print(max_subarray_sum([-2,1,-3,4,-1,2,1,-5,4]))  # Output: 6 (from [4,-1,2,1])
+def longest_subarray_with_sum_k(arr, K):
+    sum_index = {0: -1}
+    curr_sum = 0
+    max_length = 0
+    
+    for i in range(len(arr)):
+        curr_sum += arr[i]
+        if curr_sum - K in sum_index:
+            max_length = max(max_length, i - sum_index[curr_sum - K])
+        if curr_sum not in sum_index:
+            sum_index[curr_sum] = i
+            
+    return max_length
+
+def subarrays_div_by_k(nums, k):
+    prefix_mod = {0: 1}
+    current_mod = 0
+    count = 0
+    
+    for num in nums:
+        current_mod = (current_mod + num) % k
+        if current_mod < 0:
+            current_mod += k
+        count += prefix_mod.get(current_mod, 0)
+        prefix_mod[current_mod] = prefix_mod.get(current_mod, 0) + 1
+    
+    return count
+
+def max_sum_subarray_size_k(nums, k):
+    max_sum = window_sum = sum(nums[:k])  # Initialize with sum of first k elements
+    
+    for i in range(k, len(nums)):
+        window_sum += nums[i] - nums[i - k]  # Slide window: add new element, remove oldest
+        max_sum = max(max_sum, window_sum)   # Update max_sum if window_sum is larger
+    
+    return max_sum
+
+def length_of_longest_substring(s):
+    char_set = set()
+    left = 0
+    max_len = 0
+    
+    for right in range(len(s)):
+        while s[right] in char_set:
+            char_set.remove(s[left])
+            left += 1
+        char_set.add(s[right])
+        max_len = max(max_len, right - left + 1)
+    
+    return max_len
+
+def minWindow(s: str, t: str) -> str:
+    if not s or not t:
+        return ""
+    
+    # Count frequency of characters in t
+    t_count = {}
+    for char in t:
+        t_count[char] = t_count.get(char, 0) + 1
+    
+    # Initialize variables
+    required = len(t_count)  # Number of unique chars in t
+    formed = 0              # Number of chars with required frequency in window
+    window_count = {}       # Frequency of chars in current window
+    left = right = 0        # Window pointers
+    min_len = float('inf')  # Length of minimum window
+    min_window_start = 0    # Start index of minimum window
+    
+    while right < len(s):
+        # Expand window: add character at right
+        char = s[right]
+        window_count[char] = window_count.get(char, 0) + 1
+        
+        # Check if this character contributes to forming a valid window
+        if char in t_count and window_count[char] == t_count[char]:
+            formed += 1
+        
+        # Contract window: try to minimize while still valid
+        while left <= right and formed == required:
+            char = s[left]
+            # Update minimum window if current is smaller
+            if right - left + 1 < min_len:
+                min_len = right - left + 1
+                min_window_start = left
+            
+            # Remove leftmost character
+            window_count[char] -= 1
+            if char in t_count and window_count[char] < t_count[char]:
+                formed -= 1
+            left += 1
+        
+        right += 1
+    
+    return "" if min_len == float('inf') else s[min_window_start:min_window_start + min_len]
+
+def minWindow(s: str, t: str) -> str:
+    if not s or not t or len(t) > len(s):
+        return ""
+    
+    n, m = len(s), len(t)
+    # dp[i][j] = start index of shortest substring ending at i containing t[0:j]
+    dp = [[-1] * (m + 1) for _ in range(n + 1)]
+    
+    # Base case: empty subsequence
+    for i in range(n + 1):
+        dp[i][0] = 0
+    
+    # Fill DP table
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            if s[i-1] == t[j-1]:
+                if dp[i-1][j-1] != -1:
+                    dp[i][j] = dp[i-1][j-1]
+            else:
+                if dp[i-1][j] != -1:
+                    dp[i][j] = dp[i-1][j]
+    
+    # Find minimum window
+    min_len = float('inf')
+    min_window_start = 0
+    for i in range(n + 1):
+        if dp[i][m] != -1:
+            curr_len = i - dp[i][m]
+            if curr_len < min_len:
+                min_len = curr_len
+                min_window_start = dp[i][m]
+    
+    return "" if min_len == float('inf') else s[min_window_start:min_window_start + min_len]
