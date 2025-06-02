@@ -10,6 +10,31 @@ def max_subarray_sum(nums):
         max_global = max(max_global, max_current)
     return max_global
 
+def COUNTsubarraySum(nums, k):
+    count = 0
+    curr_sum = 0
+    prefix_sums = {0: 1}  # Initialize with 0 sum having frequency 1
+    
+    for num in nums:
+        curr_sum += num  # Update cumulative sum
+        # If (curr_sum - k) exists, add its frequency to count
+        if curr_sum - k in prefix_sums:
+            count += prefix_sums[curr_sum - k]
+        # Update frequency of current sum
+        prefix_sums[curr_sum] = prefix_sums.get(curr_sum, 0) + 1
+    
+    return count
+
+# Example usage
+nums1 = [1, 1, 1]
+k1 = 2
+print("Input: nums =", nums1, ", k =", k1)
+print("Output:", subarraySum(nums1, k1))  # Output: 2
+
+nums2 = [1, 2, 3]
+k2 = 3
+print("Input: nums =", nums2, ", k =", k2)
+print("Output:", subarraySum(nums2, k2))  # Output: 2
 def longest_subarray_with_sum_k(arr, K):
     sum_index = {0: -1}
     curr_sum = 0
