@@ -183,3 +183,22 @@ def numberOfSubarrays(self, nums: List[int], k: int) -> int:
                 count += sum_index[curr_sum - goal]
             sum_index[curr_sum] = sum_index.get(curr_sum,0) + 1
         return count
+
+def maxScore(cardPoints, k):
+    n = len(cardPoints)
+    total_sum = sum(cardPoints)
+    window_size = n - k
+    
+    if window_size == 0:
+        return total_sum
+    
+    # Initial window sum of size n-k
+    window_sum = sum(cardPoints[:window_size])
+    min_window_sum = window_sum
+    
+    # Slide the window
+    for i in range(window_size, n):
+        window_sum = window_sum + cardPoints[i] - cardPoints[i - window_size]
+        min_window_sum = min(min_window_sum, window_sum)
+    
+    return total_sum - min_window_sum
