@@ -24,17 +24,6 @@ def COUNTsubarraySum(nums, k):
         prefix_sums[curr_sum] = prefix_sums.get(curr_sum, 0) + 1
     
     return count
-
-# Example usage
-nums1 = [1, 1, 1]
-k1 = 2
-print("Input: nums =", nums1, ", k =", k1)
-print("Output:", subarraySum(nums1, k1))  # Output: 2
-
-nums2 = [1, 2, 3]
-k2 = 3
-print("Input: nums =", nums2, ", k =", k2)
-print("Output:", subarraySum(nums2, k2))  # Output: 2
 def longest_subarray_with_sum_k(arr, K):
     sum_index = {0: -1}
     curr_sum = 0
@@ -85,6 +74,20 @@ def length_of_longest_substring(s):
         max_len = max(max_len, right - left + 1)
     
     return max_len
+
+def beautifulSubarrays(nums):
+    prefix_xor = 0
+    count = 0
+    xor_freq = {0: 1}  # Initialize with XOR 0 having frequency 1
+    
+    for num in nums:
+        prefix_xor ^= num  # Update cumulative XOR
+        # If prefix_xor exists in map, add its frequency to count
+        count += xor_freq.get(prefix_xor, 0)
+        # Update frequency of current prefix_xor
+        xor_freq[prefix_xor] = xor_freq.get(prefix_xor, 0) + 1
+    
+    return count
 
 def minWindow(s: str, t: str) -> str:
     if not s or not t:
