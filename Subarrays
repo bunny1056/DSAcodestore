@@ -1,3 +1,8 @@
+Prefix Sum Concept:
+Compute the running sum (curr_sum) of nums as you iterate.
+A subarray from index i+1 to j has sum goal if prefix_sum[j] - prefix_sum[i] = goal.
+Equivalently, for index j, find how many indices i have prefix_sum[i] = prefix_sum[j] - goal.
+
 def max_subarray_sum(nums):
     max_current = max_global = nums[0]
     for num in nums[1:]:
@@ -133,3 +138,48 @@ def minWindow(s: str, t: str) -> str:
                 min_window_start = dp[i][m]
     
     return "" if min_len == float('inf') else s[min_window_start:min_window_start + min_len]
+
+from collections import defaultdict
+
+def totalFruit(fruits):
+    basket = defaultdict(int)  # Fix: Use defaultdict to avoid KeyError
+    left = 0
+    max_fruits = 0
+    
+    for right, fruit in enumerate(fruits):
+        basket[fruit] += 1  # Now safe for new fruits
+        
+        while len(basket) > 2:
+            left_fruit = fruits[left]
+            basket[left_fruit] -= 1
+            if basket[left_fruit] == 0:
+                del basket[left_fruit]
+            left += 1
+        
+        max_fruits = max(max_fruits, right - left + 1)
+    
+    return max_fruits
+
+def numSubarraysWithSum(self, nums: List[int], goal: int) -> int:
+        sum_index = {0:1}
+        curr_sum = 0
+        count = 0
+
+        for num in nums:
+            curr_sum += num
+            if curr_sum - goal in sum_index:
+                count += sum_index[curr_sum - goal]
+            sum_index[curr_sum] = sum_index.get(curr_sum,0) + 1
+        return count
+def numberOfSubarrays(self, nums: List[int], k: int) -> int:
+        sum_index = {0:1}
+        curr_sum = 0
+        count = 0
+        goal = k
+
+        for num in nums:
+            curr_sum += 1 if num%2 == 1 else 0
+            if curr_sum - goal in sum_index:
+                count += sum_index[curr_sum - goal]
+            sum_index[curr_sum] = sum_index.get(curr_sum,0) + 1
+        return count
