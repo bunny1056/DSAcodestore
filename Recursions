@@ -10,3 +10,10 @@ def print_1_to_n(n):
     print_n_to_1(n - 1)  # Then recurse with n-1
     print(n, end=' ')
 
+def backtrack(path, current):
+    if current == target:
+        results.append(path[:])
+        return
+    for neighbor in graph[current]:
+        backtrack(path + [neighbor], neighbor)
+
