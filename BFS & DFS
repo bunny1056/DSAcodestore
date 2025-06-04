@@ -324,6 +324,56 @@ def ladderLength(beginWord, endWord, wordList):
     
     return 0
 
+WordLadder II
+from collections import deque
+from typing import List
+
+def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+    Q = deque()
+    Q.append(beginWord)
+    wordSet = set(wordList)
+
+    if endWord not in wordList:
+        return []
+    
+    parents = defaultdict(list)  # Changed to defaultdict
+    parents[beginWord] = []  # Begin word has no parents
+    found = False
+
+    while Q and not found:
+        visited_this_level = set()
+        for _ in range(len(Q)):
+            word = Q.popleft()
+            for i in range(len(word)):
+                for c in 'abcdefghijklmnopqrstuvwxyz':
+                    next_word = word[:i] + c + word[i+1:]
+
+                    if next_word == endWord:
+                        found = True
+                        parents[next_word].append(word)  # Now works with defaultdict
+
+                    elif next_word in wordSet:
+                        if next_word not in visited_this_level:
+                            Q.append(next_word)
+                            visited_this_level.add(next_word)
+                            parents[next_word].append(word)
+                        else:
+                            parents[next_word].append(word)
+
+        wordSet -= visited_this_level
+    
+    result = []
+
+    def backtrack(node, path):
+        if node == beginWord:
+            result.append(path[::-1])
+            return
+        for parent in parents[node]:
+            backtrack(parent, path + [parent])
+    
+    backtrack(endWord, [endWord])
+    return result
+
 Bipartite!
 def isBipartite(self, graph: List[List[int]]) -> bool:
         V = len(graph)
