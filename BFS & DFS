@@ -1,88 +1,90 @@
 Number of possible edges = n(n-1)/2
 Total undirected graphs = 2^(n(n-1)/2)
 
-# Build adjacency list
-    adj = [[] for _ in range(n)]
+Connected Components
+# Step 1: Build adjacency list
+    adj = defaultdict(list)
     for u, v in edges:
         adj[u].append(v)
         adj[v].append(u)
-# BFS
-#User function Template for python3
-from collections import deque
-from typing import List  # Import List for type hints
 
-class Solution:
-    # Function to return Breadth First Search Traversal of given graph.
+DFS iteravtive
+def connectedComponents(V, edges):
+    from collections import defaultdict
 
-    def bfs(self, adj: List[List[int]]) -> List[int]:
-        # code here
-        V = len(adj)
-        visited = [False] * V
-        result = []
-        
-        Q = deque()
-        
-        Q.append(0)
-        visited[0] = True
-        
-        while Q:
-            current = Q.popleft() 
-            result.append(current)
-            
-            for x in adj[current]:
-                if not visited[x]:
-                    Q.append(x)
-                    visited[x] = True
-        return result 
-In BFS, we process nodes in First-In-First-Out (FIFO) order—the first node discovered is the first one processed.
-queue.popleft() removes and returns the leftmost (oldest) element from the deque (double-ended queue), ensuring proper BFS order.
-If we used queue.pop() (which removes the rightmost element), it would behave like DFS (Depth-First Search) instead! 
+    visited = [False] * V
+    result = []
 
-Normal DFS if order matters
-def dfs(self, adj):
-        # code here
-        V = len(adj)
-        st = []
-        result = []
-        visited = [False] * V
-        st.append(0)
-        while st:
-            curr = st.pop()
-            if not visited[curr]:
-                visited[curr] = True
-                result.append(curr)
-                for x in reversed(adj[curr]):
-                    if not visited[x]:
-                        st.append(x)
-        return result
+    # Step 2: Iterative DFS using stack
+    for start in range(V):
+        if not visited[start]:
+            stack = [start]
+            component = []
+
+            while stack:
+                node = stack.pop()
+                if not visited[node]:
+                    visited[node] = True
+                    component.append(node)
+                    # Push all unvisited neighbors onto the stack
+                    for neighbor in adj[node]: #if order matters use reversed
+                        if not visited[neighbor]:
+                            stack.append(neighbor)
+
+            result.append(sorted(component))  # Sort each component if needed
+
+    return result
+DFS recursive
+def connectedComponents(V, edges):
+    from collections import defaultdict
+
+    visited = [False] * V
+    result = []
+
+    def dfs(node, component):
+        visited[node] = True
+        component.append(node)
+        for neighbor in adj[node]:
+            if not visited[neighbor]:
+                dfs(neighbor, component)
+
+    # Step 2: Visit each vertex
+    for v in range(V):
+        if not visited[v]:
+            component = []
+            dfs(v, component)
+            result.append(sorted(component))  # Sorting each component
+
+    return result
+BFS 
+from collections import defaultdict, deque
+
+def connectedComponents(V, edges):
+
+    visited = [False] * V
+    result = []
+
+    # Step 2: BFS for each unvisited node
+    for start in range(V):
+        if not visited[start]:
+            queue = deque([start])
+            component = []
+
+            while queue:
+                node = queue.popleft()
+                if not visited[node]:
+                    visited[node] = True
+                    component.append(node)
+
+                    for neighbor in adj[node]:
+                        if not visited[neighbor]:
+                            queue.append(neighbor)
+
+            result.append(sorted(component))  # Sort component if needed
+
+    return result
 
 Connected components(DFS)
-DFS Helper:
-Takes a city and marks it visited
-Explores all directly connected cities (where isConnected[city][neighbor] == 1)
-Recursively visits unvisited neighbors
-Main Logic:
-Iterate through all cities
-If a city hasn't been visited, start a DFS from it
-Each new DFS call represents a new province
-Increment province count after each component is fully explored
-3ms
-def findCircleNum(self, isConnected: List[List[int]]) -> int:
-        V = len(isConnected)
-        visited = [False] * V
-        provinces = 0
-
-        def dfs(city):
-            visited[city] = True
-            for neighbour in range(V):
-                if isConnected[city][neighbour] == 1 and not visited[neighbour]:
-                    dfs(neighbour)
-        for city in range(V):
-            if not visited[city]:
-                dfs(city)
-                provinces += 1
-        return provinces
-0ms
 class Solution:
     def findCircleNum(self, grid: List[List[int]]) -> int:
         if not grid: 
@@ -103,6 +105,53 @@ class Solution:
                             visited[neighbour] = True
                             stack.append(neighbour)
         return count
+
+completene components
+def countCompleteComponents(n, edges):
+    # Build the adjacency list and an adjacency matrix for easy lookup
+    adj_list = [[] for _ in range(n)]
+    adj_matrix = [[False for _ in range(n)] for _ in range(n)]
+    
+    for a, b in edges:
+        adj_list[a].append(b)
+        adj_list[b].append(a)
+        adj_matrix[a][b] = True
+        adj_matrix[b][a] = True
+    
+    visited = [False] * n
+    complete_count = 0
+    
+    def dfs(node, component):
+        stack = [node]
+        visited[node] = True
+        component.append(node)
+        while stack:
+            current = stack.pop()
+            for neighbor in adj_list[current]:
+                if not visited[neighbor]:
+                    visited[neighbor] = True
+                    component.append(neighbor)
+                    stack.append(neighbor)
+        return component
+    
+    for i in range(n):
+        if not visited[i]:
+            component = dfs(i, [])
+            # Check if the component is complete
+            k = len(component)
+            is_complete = True
+            for a in range(k):
+                for b in range(a + 1, k):
+                    u = component[a]
+                    v = component[b]
+                    if not adj_matrix[u][v]:
+                        is_complete = False
+                        break
+                if not is_complete:
+                    break
+            if is_complete:
+                complete_count += 1
+    return complete_count
 
 What is Union-Find?
 Union-Find has two main operations:
@@ -176,56 +225,6 @@ class Solution:
                 
             minutes +=1
         return minutes if fresh == 0 else -1
-
-CYCLE detection 
-BFS 
-from typing import List
-from collections import deque
-class Solution:
-    #Function to detect cycle in an undirected graph.
-	def isCycle(self, V: int, adj: List[List[int]]) -> bool:
-		#Code here
-		visited = [False] * V
-		parent = [-1] * V
-		for i in range(V):
-		    if not visited[i]:
-		        Q = deque()
-		        Q.append(i)
-		        visited[i] = True
-        		while Q:
-        		    current = Q.popleft()
-        		    for neighbour in adj[current]:
-        		        if not visited[neighbour]:
-        		            Q.append(neighbour)
-        		            parent[neighbour] = current
-        		            visited[neighbour] = True
-        		        elif neighbour != parent[current]:
-        		            return 1
-	    return 0	
-SAME for DFS
-from typing import List
-from collections import deque
-class Solution:
-    #Function to detect cycle in an undirected graph.
-    def isCycle(self, V: int, adj: List[List[int]]) -> bool:
-        #Code here
-        visited = [False] * V
-        parent = [-1] * V
-        for i in range(V):
-            if not visited[i]:
-                st = []
-                st.append(i)
-                while st:
-                    current = st.pop()
-                    visited[current] = True
-                    for neighbour in reversed(adj[current]):
-                        if not visited[neighbour]:
-                            st.append(neighbour)
-                            parent[neighbour] = current
-                        elif neighbour != parent[current]:
-                            return 1
-        return 0                        
-# neighbour = parent[current] -- tree edge
 
 Surrounded Regions
 Key insight
@@ -302,59 +301,28 @@ def solve(board):
             elif board[i][j] == 'T':
                 board[i][j] = 'O'
 WORD LADDER
-
-from collections import deque
-class Solution:
-    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
-        Q = deque()
-        Q.append((beginWord,1))
-        wordSet = set(wordList)
-        visited = set()
-        visited.add(beginWord)
-
-        if endWord not in wordList:
-            return 0
-        if beginWord in wordList:
-            wordList.remove(beginWord)
-
-        while Q:
-            word, length = Q.popleft()
-            if word == endWord:
-                return length
-            
-            for i in range(len(word)):
-                for c in 'abcdefghijklmnopqrstuvwxyz':
-                    if c == word[i]:
-                        continue
-                    next_word = word[:i] + c + word[i+1:]
-
-                    if next_word in wordSet and next_word not in visited:
-                        Q.append((next_word,length + 1))
-                        visited.add(next_word)
-        return 0 
-
-Detect cycle in directed graph DFS 
-def is_cyclic_directed(graph):
-    visited = set()
-    rec_stack = set()
+def ladderLength(beginWord, endWord, wordList):
+    wordSet = set(wordList)
+    if endWord not in wordSet:
+        return 0
+    if beginWord in wordSet:
+        wordSet.remove(beginWord)
     
-    def dfs(node):
-        visited.add(node)
-        rec_stack.add(node)
-        for neighbor in graph[node]:
-            if neighbor not in visited:
-                if dfs(neighbor):
-                    return True
-            elif neighbor in rec_stack:  # Back edge → cycle
-                return True
-        rec_stack.remove(node)  # Backtrack
-        return False
+    queue = deque([(beginWord, 1)])
     
-    for node in graph:
-        if node not in visited:
-            if dfs(node):
-                return True
-    return False
+    while queue:
+        word, length = queue.popleft()
+        if word == endWord:
+            return length
+        
+        for i in range(len(word)):
+            for c in 'abcdefghijklmnopqrstuvwxyz':
+                next_word = word[:i] + c + word[i+1:]
+                if next_word in wordSet:
+                    wordSet.remove(next_word)
+                    queue.append((next_word, length + 1))
+    
+    return 0
 
 Bipartite!
 def isBipartite(self, graph: List[List[int]]) -> bool:
