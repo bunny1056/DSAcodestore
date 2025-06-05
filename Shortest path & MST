@@ -72,11 +72,9 @@ class Solution:
             visited.add(current_node)
             
             for neighbour, weight in adj[current_node]:
-                if neighbour in visited:
-                    continue
                 
                 distance = current_distance + weight
-                if distances[neighbour] > distance:
+                if neighbor not in visited and distances[neighbour] > distance:
                     distances[neighbour] = distance
                     heapq.heappush(priority_queue, (distance, neighbour))
             
@@ -162,6 +160,41 @@ class Solution:
                     queue.append((next_val, steps + 1))
         
         return -1
+
+cheapest flight within K stops
+import heapq
+from collections import defaultdict
+
+def findCheapestPrice(n, flights, src, dst, k):
+    flight = defaultdict(list)
+    for f, t, p in flights:
+        flight[f].append((t, p))
+
+    # dist[node][stops] = min cost to reach node with stops used
+    dist = defaultdict(lambda: float('inf'))
+    dist[(src, 0)] = 0
+
+    # Heap elements: (cost, node, stops)
+    minhp = [(0, src, 0)]
+
+    while minhp:
+        cost, node, stops = heapq.heappop(minhp)
+
+        if node == dst:
+            return cost
+
+        if stops > k:
+            continue
+
+        for nei, price in flight[node]:
+            new_cost = cost + price
+            # Only push if new_cost is better for this node with stops+1
+            if dist[(nei, stops + 1)] > new_cost:
+                dist[(nei, stops + 1)] = new_cost
+                heapq.heappush(minhp, (new_cost, nei, stops + 1))
+
+    return -1
+
 
 MST (Prim's)
 def minimum_spanning_tree(adj):
