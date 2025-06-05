@@ -195,28 +195,146 @@ def findCheapestPrice(n, flights, src, dst, k):
 
     return -1
 
+def countPaths(self, n: int, roads: List[List[int]]) -> int:
+        adj = [[] for _ in range(n)]
+        for a,b,c in roads:
+            adj[a].append((b,c))
+            adj[b].append((a,c))
+        pathcounts = [0] * n
+        pathcounts[0] = 1
+        pq = []
+        heapq.heappush(pq,(0,0))
+        distances = [float('inf')]*n
+        distances[0] = 0
+        MOD = 10**9 + 7
+
+
+        while pq:
+            current_distance, current_node = heapq.heappop(pq)
+
+            if current_distance > distances[current_node]:
+                continue
+            for neighbour, next_distance in adj[current_node]:
+                distance = current_distance + next_distance
+                if distance < distances[neighbour]:
+                    distances[neighbour] = distance
+                    pathcounts[neighbour] = pathcounts[current_node]
+                    heapq.heappush(pq,(distance, neighbour))
+                elif distance == distances[neighbour]:
+                    pathcounts[neighbour] = (pathcounts[neighbour] + pathcounts[current_node]) % MOD              
+                   
+        return pathcounts[n - 1] if distances[n - 1] != float('inf') else 0
+
+Bellman Ford
+def bellman_ford(edges, V, src):
+    # edges = list of tuples (u, v, w)
+    dist = [float('inf')] * V
+    dist[src] = 0
+
+    # Relax edges V-1 times
+    for _ in range(V - 1):
+        for u, v, w in edges:
+            if dist[u] != float('inf') and dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+
+    # Check for negative weight cycle
+    for u, v, w in edges:
+        if dist[u] != float('inf') and dist[u] + w < dist[v]:
+            print("Graph contains negative weight cycle")
+            return None
+
+    return dist
+
+def floyd_warshall(graph):
+    """
+    graph: 2D list (adjacency matrix)
+    graph[i][j] = weight of edge i->j or float('inf') if no direct edge
+    """
+    V = len(graph)
+    dist = [row[:] for row in graph]  # deep copy of graph matrix
+
+    for k in range(V):
+        for i in range(V):
+            for j in range(V):
+                if dist[i][k] + dist[k][j] < dist[i][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+
+    # Optional: Detect negative cycle (if dist[i][i] < 0 for any i)
+    for i in range(V):
+        if dist[i][i] < 0:
+            print("Negative cycle detected")
+            return None
+
+    return dist
+
+def findCity(n, edges, distanceThreshold):
+    INF = float('inf')
+    dist = [[INF] * n for _ in range(n)]
+    
+    for i in range(n):
+        dist[i][i] = 0
+    
+    # Fill initial distances from edges (bidirectional)
+    for u, v, w in edges:
+        dist[u][v] = w
+        dist[v][u] = w
+    
+    # Floyd-Warshall All-Pairs Shortest Paths
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if dist[i][k] + dist[k][j] < dist[i][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+    
+    result = -1
+    min_reachable = n + 1  # More than max cities possible
+    
+    for city in range(n):
+        reachable_count = 0
+        for other in range(n):
+            if dist[city][other] <= distanceThreshold:
+                reachable_count += 1
+        
+        # Exclude the city itself? Usually count includes self (distance 0), but 
+        # problem can be interpreted both ways. Here including self is fine.
+        # To exclude, do: if other != city and dist[city][other] <= distanceThreshold
+        
+        if reachable_count <= min_reachable:
+            # If tie on reachable_count, pick city with greatest index
+            min_reachable = reachable_count
+            result = city
+    
+    return result
 
 MST (Prim's)
-def minimum_spanning_tree(adj):
-    n = len(adj)
-    visited = [False] * n
-    min_heap = []
-    # Start with node 0
-    heapq.heappush(min_heap, (0, 0))  # (weight, node)
-    mst_weight = 0
+import heapq
+from collections import defaultdict
+
+def prim_mst(n, edges):
+    # Build adjacency list: node -> [(neighbor, weight), ...]
+    graph = defaultdict(list)
+    for u, v, w in edges:
+        graph[u].append((v, w))
+        graph[v].append((u, w))
     
-    while min_heap:
+    visited = set()
+    min_heap = [(0, 0)]  # (weight, node), start from node 0
+    total_weight = 0
+    
+    while min_heap and len(visited) < n:
         weight, node = heapq.heappop(min_heap)
-        if visited[node]:
+        if node in visited:
             continue
-        visited[node] = True
-        mst_weight += weight
+        visited.add(node)
+        total_weight += weight
         
-        for neighbor, edge_weight in adj[node]:
-            if not visited[neighbor]:
-                heapq.heappush(min_heap, (edge_weight, neighbor))
+        for neighbor, w in graph[node]:
+            if neighbor not in visited:
+                heapq.heappush(min_heap, (w, neighbor))
     
-    return mst_weight
+    # If all nodes visited, return total MST weight; else, graph not connected
+    return total_weight if len(visited) == n else -1
+
 union-find:
 def find(par, x):
     if par[x] != x:
@@ -257,6 +375,38 @@ def kruskal_mst(edges, num_vertices):
                 break
     
     return mst
+
+Tarzan
+class Solution:
+    def criticalConnections(self, n: int, connections: List[List[int]]) -> List[List[int]]:
+        graph = [[] for _ in range(n)]
+        for u, v in connections:
+            graph[u].append(v)
+            graph[v].append(u)
+        
+        res = []
+        disc = [-1] * n  # discovery times
+        low = [-1] * n
+        time = 0
+
+        def dfs(u, parent):
+            nonlocal time
+            disc[u] = low[u] = time
+            time += 1
+
+            for v in graph[u]:
+                if v == parent:
+                    continue
+                if disc[v] == -1:  # not visited
+                    dfs(v, u)
+                    low[u] = min(low[u], low[v])
+                    if low[v] > disc[u]:  # critical connection found
+                        res.append([u, v])
+                else:
+                    low[u] = min(low[u], disc[v])
+
+        dfs(0, -1)
+        return res
 
 
 
