@@ -68,3 +68,50 @@ def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int
                     Q.append(prereq)
         return topo_order if len(topo_order) == V else []
         
+AlienDictionary
+from collections import defaultdict, deque
+
+def alienOrder(words):
+    # Step 1: Initialize data structures
+    graph = defaultdict(set)   # adjacency list
+    indegree = defaultdict(int)              # count of incoming edges for each node (letter)
+    
+    # Initialize indegree for all unique letters
+    for word in words:
+        for char in word:
+            indegree[char] = 0
+    
+    # Step 2: Build graph edges from adjacent words
+    for i in range(len(words) - 1):
+        w1, w2 = words[i], words[i+1]
+        
+        # Check prefix condition that makes ordering invalid
+        if len(w1) > len(w2) and w1.startswith(w2):
+            return ""
+        
+        # Find the first difference and create edge
+        for c1, c2 in zip(w1, w2):
+            if c1 != c2:
+                if c2 not in graph[c1]:
+                    graph[c1].add(c2)
+                    indegree[c2] += 1
+                break  # Only first differing char matters
+    
+    # Step 3: Topological sort using BFS (Kahn's algorithm)
+    queue = deque([c for c in indegree if indegree[c] == 0])
+    order = []
+    
+    while queue:
+        char = queue.popleft()
+        order.append(char)
+        
+        for nei in graph[char]:
+            indegree[nei] -= 1
+            if indegree[nei] == 0:
+                queue.append(nei)
+    
+    # If order includes all unique letters, return string else ""
+    if len(order) == len(indegree):
+        return "".join(order)
+    else:
+        return ""
