@@ -120,3 +120,44 @@ class Solution:
         backTracking(0, [])
         return res
 
+Generate Permutations
+def permuteUnique(nums):
+    res = []
+    nums.sort()  # Sort to handle duplicates
+    used = [False] * len(nums)
+
+    def backtrack(path):
+        if len(path) == len(nums):
+            res.append(path[:])
+            return
+        for i in range(len(nums)):
+            # Skip used elements
+            if used[i]:
+                continue
+            # Skip duplicates: if current is same as previous and previous not used
+            if i > 0 and nums[i] == nums[i-1] and not used[i-1]:
+                continue
+            used[i] = True
+            path.append(nums[i])
+            backtrack(path)
+            path.pop()
+            used[i] = False
+
+    backtrack([])
+    return res
+
+Get Permutation
+def getPermutation(n, k):
+    import math
+
+    nums = [str(i) for i in range(1, n + 1)]
+    k -= 1  # Convert to 0-indexed
+    result = []
+
+    for i in range(n, 0, -1):
+        fact = math.factorial(i - 1)
+        index = k // fact
+        result.append(nums.pop(index))
+        k %= fact
+
+    return ''.join(result)
