@@ -136,6 +136,76 @@ def longestSubarrayWithSumK(arr, n, k):
             if complement in index_map:
                 return [i,index_map[complement]]
             index_map[num] = i
+3sum
+def threeSum(nums):
+    nums.sort()
+    n = len(nums)
+    result = []
+
+    for i in range(n):
+        # Skip the same `nums[i]` to avoid duplicate triplets
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        
+        target = -nums[i]
+        left = i + 1
+        right = n - 1
+
+        while left < right:
+            sum_two = nums[left] + nums[right]
+            if sum_two == target:
+                result.append([nums[i], nums[left], nums[right]])
+                left += 1
+                right -= 1
+
+                # Skip duplicates for left and right
+                while left < right and nums[left] == nums[left - 1]:
+                    left += 1
+                while left < right and nums[right] == nums[right + 1]:
+                    right -= 1
+            elif sum_two < target:
+                left += 1
+            else:
+                right -= 1
+
+    return result
+def searchMatrix(matrix, target):
+    if not matrix or not matrix[0]:
+        return False
+
+    m, n = len(matrix), len(matrix[0])
+    left, right = 0, m * n - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        row = mid // n
+        col = mid % n
+        mid_val = matrix[row][col]
+
+        if mid_val == target:
+            return True
+        elif mid_val < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return False
+
+def myPow(x, n):
+    def fast_pow(base, power):
+        if power == 0:
+            return 1.0
+        half = fast_pow(base, power // 2)
+        if power % 2 == 0:
+            return half * half
+        else:
+            return half * half * base
+
+    if n < 0:
+        x = 1 / x
+        n = -n
+
+    return fast_pow(x, n)
 
 sort colors/ dutch national flag
 def sortColors(nums):
@@ -161,6 +231,18 @@ def majorityElement(nums):
             candidate = num
         count += (1 if num == candidate else -1)
     return candidate
+
+from collections import Counter
+class Solution:
+    def majorityElement(self, nums: List[int]) -> List[int]:
+        count = Counter(nums)
+        n = len(nums)
+        res = []
+        for num, freq in count.items():
+            if freq > n/3:
+                res.append(num)
+        return res
+
 
 Kadane's Algo
 def maxSubArray(nums):
