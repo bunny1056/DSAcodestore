@@ -31,4 +31,92 @@ def subsets(nums):
     backtrack(0, [])
     return res
 
+Combination sum I
+def combinationSum(candidates, target):
+    res = []
+    
+    def backtrack(start, path, total):
+        if total == target:
+            res.append(path[:])
+            return
+        if total > target:
+            return
+        
+        for i in range(start, len(candidates)):
+            path.append(candidates[i])
+            backtrack(i, path, total + candidates[i])  # i, not i+1 → reuse allowed
+            path.pop()
+    
+    backtrack(0, [], 0)
+    return res
+
+Combination Sum II
+def combinationSum2(candidates, target):
+    res = []
+    candidates.sort()
+    
+    def backtrack(start, path, total):
+        if total == target:
+            res.append(path[:])
+            return
+        if total > target:
+            return
+        
+        for i in range(start, len(candidates)):
+            if i > start and candidates[i] == candidates[i - 1]:
+                continue  # skip duplicates
+            path.append(candidates[i])
+            backtrack(i + 1, path, total + candidates[i])  # i + 1 → use once
+            path.pop()
+    
+    backtrack(0, [], 0)
+    return res
+using DFS
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        
+        #setup
+        result = []
+        combination = []
+        candidates.sort() #to group the same candidates together
+
+        def dfs(index,target):
+
+            #is a solution
+            if target == 0: 
+                result.append(combination.copy()) 
+
+            elif index < len(candidates): #do unconsiderd candidates remain?
+                if target >= candidates[index]: #is it possible to add more candidates to combination and get a solution?
+
+                    combination.append(candidates[index])
+                    dfs(index+1, target - candidates[index]) #with candidate at this index and all equivalents before index
+                    combination.pop()
+
+                    # without candidate at this index and any equivalents after index
+                    for i in range(index+1,len(candidates)): #
+                        if candidates[index] != candidates[i]:
+                            dfs(i,target) #with next unique candidate
+                            break
+
+        dfs(0,target) # construction of result
+        return result # return after construction
+
+class Solution:
+    def partition(self, s: str) -> List[List[str]]:
+        res = []
+        def backTracking(i, sub):
+            if i == len(s):
+                res.append(sub[:])
+                return
+            ns = ""
+            for j in range(i, len(s)):
+                ns += s[j]
+                if ns == ns[::-1]:
+                    sub.append(ns)
+                    backTracking(j+1, sub)
+                    sub.pop()
+
+        backTracking(0, [])
+        return res
 
