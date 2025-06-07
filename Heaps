@@ -1,3 +1,4 @@
+Min-Heap Keeps the smallest of the top k elements at the root.
 # Heapify function to maintain the Max-Heap property
 def heapify(arr, n, i):
     largest = i          # Initialize largest as the root
