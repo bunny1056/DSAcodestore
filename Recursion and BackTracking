@@ -1,3 +1,7 @@
+Backtracking is:
+
+“Trying a choice, going forward, and if it leads to a dead end, undoing that choice and trying something else.”
+
 res = []
 
 def backtrack(path, options):
@@ -161,3 +165,33 @@ def getPermutation(n, k):
         k %= fact
 
     return ''.join(result)
+
+def solveNQueens(n):
+    res = []
+
+    def backtrack(row, cols, diag1, diag2, board):
+        if row == n:
+            res.append(["".join(r) for r in board])
+            return
+
+        for col in range(n):
+            if col in cols or (row - col) in diag1 or (row + col) in diag2:
+                continue  # unsafe position
+
+            # ✅ Try placing queen
+            board[row][col] = 'Q'
+            cols.add(col)
+            diag1.add(row - col)
+            diag2.add(row + col)
+
+            backtrack(row + 1, cols, diag1, diag2, board)
+
+            # 🔙 Backtrack: remove queen
+            board[row][col] = '.'
+            cols.remove(col)
+            diag1.remove(row - col)
+            diag2.remove(row + col)
+
+    board = [["."] * n for _ in range(n)]
+    backtrack(0, set(), set(), set(), board)
+    return res
