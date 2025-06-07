@@ -1,0 +1,91 @@
+# Palindrome Partitioning I - All Palindromic Partitions (Backtracking)
+def partition(s):
+    res = []
+    def is_palindrome(sub):
+        return sub == sub[::-1]
+
+    def backtrack(start, path):
+        if start == len(s):
+            res.append(path[:])
+            return
+        for end in range(start + 1, len(s) + 1):
+            if is_palindrome(s[start:end]):
+                backtrack(end, path + [s[start:end]])
+    backtrack(0, [])
+    return res
+
+# Palindrome Partitioning II - Minimum Cuts (DP)
+def minCut(s):
+    n = len(s)
+    is_pal = [[False]*n for _ in range(n)]
+    for i in range(n):
+        is_pal[i][i] = True
+    for length in range(2, n+1):
+        for i in range(n - length + 1):
+            j = i + length - 1
+            if s[i] == s[j] and (length == 2 or is_pal[i+1][j-1]):
+                is_pal[i][j] = True
+
+    dp = [float('inf')] * n
+    for i in range(n):
+        if is_pal[0][i]:
+            dp[i] = 0
+        else:
+            for j in range(i):
+                if is_pal[j+1][i]:
+                    dp[i] = min(dp[i], dp[j]+1)
+    return dp[-1]
+
+# Palindrome Partitioning III - K partitions with min changes (DP + Memoization)
+def palindromePartition(s, k):
+    n = len(s)
+    cost = [[0]*n for _ in range(n)]
+
+    # Precompute cost to convert s[i..j] to palindrome
+    for i in range(n):
+        for j in range(i, n):
+            l, r = i, j
+            c = 0
+            while l < r:
+                if s[l] != s[r]:
+                    c += 1
+                l += 1
+                r -= 1
+            cost[i][j] = c
+
+    from functools import lru_cache
+    @lru_cache(None)
+    def dp(i, k):
+        if k == 1:
+            return cost[i][n-1]
+        res = float('inf')
+        for j in range(i, n - k + 1):
+            res = min(res, cost[i][j] + dp(j+1, k-1))
+        return res
+
+    return dp(0, k)
+
+# Palindrome Partitioning IV - Can split into at least k palindromes (DFS + Memo)
+def checkPartitioning(s, k):
+    n = len(s)
+    is_pal = [[False]*n for _ in range(n)]
+    for i in range(n):
+        is_pal[i][i] = True
+    for length in range(2, n+1):
+        for i in range(n - length + 1):
+            j = i + length - 1
+            if s[i] == s[j] and (length == 2 or is_pal[i+1][j-1]):
+                is_pal[i][j] = True
+
+    from functools import lru_cache
+    @lru_cache(None)
+    def dfs(i, count):
+        if count == k:
+            return i == n
+        for j in range(i, n):
+            if is_pal[i][j]:
+                if dfs(j+1, count+1):
+                    return True
+        return False
+
+    return dfs(0, 0)
