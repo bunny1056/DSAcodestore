@@ -326,7 +326,7 @@ def max_sum_combinations(A, B, K):
     B.sort(reverse=True)
     max_heap = []
     visited = set()
-    heapq.heappush(max_heap, (-(A[0] + B[0]), (0, 0))
+    heapq.heappush(max_heap, (-(A[0] + B[0]), (0, 0)))
     visited.add((0, 0))
     result = []
     
