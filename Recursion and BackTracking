@@ -1,0 +1,34 @@
+res = []
+
+def backtrack(path, options):
+    if done_condition(path):
+        res.append(path[:])
+        return
+
+    for i in range(len(options)):
+        pick an option
+        update path and state
+        backtrack(new path, remaining options)
+        undo the choice (backtrack)
+
+def subsets(nums):
+    def subsetsWithDup(nums):
+    res = []
+    nums.sort()  # sort to bring duplicates together
+
+    def backtrack(start, path):
+        res.append(path[:])  # add a copy of the current path
+
+        for i in range(start, len(nums)):
+            # Skip duplicates at the same recursion depth
+            if i > start and nums[i] == nums[i - 1]:
+                continue
+
+            path.append(nums[i])
+            backtrack(i + 1, path)
+            path.pop()
+
+    backtrack(0, [])
+    return res
+
+
