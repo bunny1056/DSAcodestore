@@ -590,3 +590,9 @@ def flatten(root):
             current.left = None
         # Move to the next node
         current = current.right
+
+def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if root:
+            root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)
+        return root 
+        
