@@ -345,3 +345,56 @@ def max_sum_combinations(A, B, K):
             visited.add((i, j + 1))
     
     return result
+
+Divide into K consecutive sets
+from collections import Counter
+import heapq
+class Solution:
+    def isPossibleDivide(self, nums: List[int], k: int) -> bool:
+        nums.sort()
+        if len(nums) % k != 0:
+            return False
+        
+        count = Counter(nums)
+        min_heap = list(count.keys())
+        heapq.heapify(min_heap)
+        res= []
+
+        while min_heap:
+            first = min_heap[0]
+            curr = []
+
+            for i in range(k):
+                num = first + i
+                if count[num] == 0:
+                    return False
+                count[num] -= 1
+                curr.append(num)
+                if count[num] == 0 and num == min_heap[0]:
+                    heapq.heappop(min_heap)
+            res.append(curr)
+        for i in range(len(res)):
+            if len(res[i]) != k:
+                return False
+        return True 
+
+Kth largest
+import heapq
+
+class KthLargest:
+    def __init__(self, k: int, nums: list[int]):
+        self.k = k
+        self.min_heap = []
+        
+        # Initialize the heap with the first k elements
+        for num in nums:
+            self.add(num)
+
+    def add(self, val: int) -> int:
+        # Add new value to the heap
+        if len(self.min_heap) < self.k:
+            heapq.heappush(self.min_heap, val)
+        elif val > self.min_heap[0]:
+            heapq.heappushpop(self.min_heap, val)
+        # The kth largest is the smallest in the min-heap
+        return self.min_heap[0]
