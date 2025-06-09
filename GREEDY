@@ -121,6 +121,67 @@ def maximumMeetings(self, start, end):
             last_end_time = e
     
     return count
+meetings I
+def canAttendMeetings(intervals):
+    intervals.sort(key=lambda x: x[0])
+    for i in range(1, len(intervals)):
+        if intervals[i][0] < intervals[i-1][1]:
+            return False
+    return True
+meetings II
+import heapq
+
+def minMeetingRooms(intervals):
+    if not intervals:
+        return 0
+
+    # Sort by start times
+    intervals.sort(key=lambda x: x[0])
+
+    # Min-heap to store end times
+    heap = []
+
+    for meeting in intervals:
+        start, end = meeting
+
+        # If the room is free (meeting can start after the earliest one ends), reuse it
+        if heap and heap[0] <= start:
+            heapq.heappop(heap)
+
+        # Allocate a new room (or reused one) and add its end time
+        heapq.heappush(heap, end)
+
+    # Heap size = number of rooms used
+    return len(heap)
+meetings III
+import heapq
+
+class Solution:
+    def mostBooked(self, n: int, meetings: list[list[int]]) -> int:
+        meetings.sort()
+        idle = list(range(n))
+        heapq.heapify(idle)
+        busy = []
+        count = [0] * n
+
+        for s, e in meetings:
+            # Free rooms ending by or before s
+            while busy and busy[0][0] <= s:
+                end_time, room_id = heapq.heappop(busy)
+                heapq.heappush(idle, room_id)
+
+            duration = e - s
+            if idle:
+                room_id = heapq.heappop(idle)
+                heapq.heappush(busy, (e, room_id))
+            else:
+                end_time, room_id = heapq.heappop(busy)
+                heapq.heappush(busy, (end_time + duration, room_id))
+
+            count[room_id] += 1
+
+        max_meetings = max(count)
+        return min(i for i, c in enumerate(count) if c == max_meetings)
 
 Jump Game I
 def canJump(nums):
