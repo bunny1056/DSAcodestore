@@ -27,6 +27,21 @@ def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
 
         Q = deque()
         Q.append(root)
+
+        while Q:
+            level_size = len(Q)
+            current_level = []
+
+            for _ in range(level_size):
+                node = Q.popleft()
+                current_level.append(node.val)
+                if node.left:
+                    Q.append(node.left)
+                if node.right:
+                    Q.append(node.right)
+            result.append(current_level)
+        return result
+
 count_nodes
 def countNodes(self, root):
         if not root:
@@ -44,21 +59,6 @@ def countNodes(self, root):
             d += 1
         return d     
         
-        result = []
-
-        while Q:
-            level_size = len(Q)
-            current_level = []
-
-            for _ in range(level_size):
-                node = Q.popleft()
-                current_level.append(node.val)
-                if node.left:
-                    Q.append(node.left)
-                if node.right:
-                    Q.append(node.right)
-            result.append(current_level)
-        return result
 using stack
 class Solution:
     def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
@@ -471,55 +471,51 @@ for postorder start post_order index = -1 and construct root.right first
 
 serialize and deserialize (important)
 from collections import deque
-class Codec:
 
+class Codec:
     def serialize(self, root):
-        """Encodes a tree to a single string.
-        
-        :type root: TreeNode
-        :rtype: str
-        """
         if not root:
-            return ""
-        queue = deque([root])
-        serialized = []
-        while queue:
-            node = queue.popleft()
-            if node:
-                serialized.append(str(node.val))
-                queue.append(node.left)
-                queue.append(node.right)
+            return "N"
+
+        res = []
+        que = deque([root])
+
+        while que:
+            node = que.popleft()
+            if not node:
+                res.append("N")
             else:
-                serialized.append("null")
-        # Remove trailing nulls to minimize the string
-        while serialized and serialized[-1] == "null":
-            serialized.pop()
-        return ",".join(serialized)
-        
+                res.append(str(node.val))
+                que.append(node.left)
+                que.append(node.right)
+        return ",".join(res)
 
     def deserialize(self, data):
-        """Decodes your encoded data to tree.
-        
-        :type data: str
-        :rtype: TreeNode
-        """
-        if not data:
+        val = data.split(",")
+        if val[0] == "N":
             return None
-        values = data.split(',')
-        root = TreeNode(int(values[0]))
-        queue = deque([root])
+
+        root = TreeNode(int(val[0]))
+        que = deque([root])
         index = 1
-        while queue and index < len(values):
-            node = queue.popleft()
-            if index < len(values) and values[index] != "null":
-                node.left = TreeNode(int(values[index]))
-                queue.append(node.left)
+
+        while que and index < len(val):
+            node = que.popleft()
+            
+            # Left child
+            if val[index] != "N":
+                node.left = TreeNode(int(val[index]))
+                que.append(node.left)
             index += 1
-            if index < len(values) and values[index] != "null":
-                node.right = TreeNode(int(values[index]))
-                queue.append(node.right)
+
+            # Right child
+            if index < len(val) and val[index] != "N":
+                node.right = TreeNode(int(val[index]))
+                que.append(node.right)
             index += 1
+
         return root
+
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
