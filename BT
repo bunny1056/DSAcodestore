@@ -1,11 +1,9 @@
 to do max_widthof BT
 
-def RLroottraversal(t):
-  if t != None:
-    traversal(t.right)
-    traversal(t.left)
-    print(t.value, end = '')
-traversal(root)
+def inorder(node):
+            if not node:
+                return []
+            return inorder(node.left) + [node.val] + inorder(node.right)
 
 Pre-order
 def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
