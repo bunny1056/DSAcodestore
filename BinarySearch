@@ -28,3 +28,53 @@ def binary_search():
             low = mid + 1
 
     return answer
+
+Koko eating bananas/Find smallest divisor
+def minEatingSpeed(piles: List[int], h: int) -> int:
+    def is_valid(k):
+        hours = 0
+        for pile in piles:
+            hours += (pile + k - 1) // k  # same as math.ceil(pile / k)
+        return hours <= h
+
+    left, right = 1, max(piles)
+    answer = -1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if is_valid(mid):
+            answer = mid
+            right = mid - 1  # try smaller k
+        else:
+            left = mid + 1   # need faster eating speed
+
+    return answer
+
+min days for bouqets
+def is_valid(day):
+    bouquets = 0     # how many bouquets we can make
+    flowers = 0      # current streak of adjacent bloomed flowers
+
+    for bloom in bloomDay:
+        if bloom <= day:
+            flowers += 1   # this flower is usable
+
+            if flowers == k:       # we have enough for a bouquet
+                bouquets += 1      # one bouquet done
+                flowers = 0        # reset for next bouquet
+        else:
+            flowers = 0  # break in adjacency — reset
+    return bouquets >= m
+    low = min(bloomDay)
+    high = max(bloomDay)
+    answer = -1
+
+    while low <= high:
+        mid = (low + high) // 2
+        if is_valid(mid):
+            answer = mid
+            high = mid - 1  # try to find an earlier day
+        else:
+            low = mid + 1
+
+    return answer
