@@ -172,6 +172,58 @@ def maxProfit_with_fee(prices, fee):
         hold = max(hold, cash - price)
     return cash
 
+dp[i][t][h] = max profit at day i, with t transactions left, and h = 0/1 (holding or not)
+If we don’t hold a stock (h=0):
+
+python
+Copy
+Edit
+dp[i][t][0] = max(
+    dp[i-1][t][0],          # do nothing
+    dp[i-1][t][1] + prices[i]  # sell
+)
+If we hold a stock (h=1):
+
+python
+Copy
+Edit
+dp[i][t][1] = max(
+    dp[i-1][t][1],             # do nothing
+    dp[i-1][t-1][0] - prices[i]  # buy (only if t > 0)
+)
+def maxProfit(k: int, prices: List[int]) -> int:
+    n = len(prices)
+    if n == 0 or k == 0:
+        return 0
+    
+    # Optimization: if k >= n//2, it's unlimited transactions
+    if k >= n // 2:
+        profit = 0
+        for i in range(1, n):
+            profit += max(0, prices[i] - prices[i-1])
+        return profit
+    
+    # dp[i][t][h] = max profit on day i with t transactions left and holding state h
+    dp = [[[0] * 2 for _ in range(k + 1)] for _ in range(n)]
+    
+    # Initialize for day 0
+    for t in range(k + 1):
+        dp[0][t][0] = 0             # Not holding any stock
+        dp[0][t][1] = -prices[0]    # Bought on day 0
+    
+    for i in range(1, n):
+        for t in range(1, k + 1):
+            dp[i][t][0] = max(dp[i-1][t][0], dp[i-1][t][1] + prices[i])       # sell
+            dp[i][t][1] = max(dp[i-1][t][1], dp[i-1][t-1][0] - prices[i])     # buy
+    
+    return dp[n-1][k][0]  # Max profit with 0 stock in hand
+| Variant               | Change                                           |
+| --------------------- | ------------------------------------------------ |
+| At most 1 transaction | Set `k = 1`                                      |
+| Infinite transactions | Skip the `k` part entirely (no need for 3D DP)   |
+| Cooldown              | Add a 1-day wait after selling (use `i-2`)       |
+| Transaction Fee       | Subtract fee during selling: `+ prices[i] - fee` |
+
 Longest increasing subsequence
 import bisect
 
