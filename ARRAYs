@@ -561,3 +561,38 @@ class Solution:
         return count
 
     return merge_sort(0, len(nums) - 1)
+
+from collections import Counter
+
+def rearrange_blocks(blocks):
+    # Step 1: Flatten the list and count number of houses per block
+    flat_list = []
+    block_sizes = []
+
+    for block in blocks:
+        flat_list.extend(block)
+        block_sizes.append(len(block))
+
+    # Step 2: Sort the flat list
+    flat_list.sort()
+    
+    # Step 3: Distribute sorted values into blocks with unique and sorted values
+    new_blocks = [[] for _ in block_sizes]
+    used = Counter()
+
+    i = 0  # Index for values in flat_list
+    for round in range(max(block_sizes)):  # Go round-robin
+        for b in range(len(block_sizes)):
+            if len(new_blocks[b]) < block_sizes[b]:
+                # Pick the next unused unique value
+                while i < len(flat_list) and flat_list[i] in new_blocks[b]:
+                    i += 1
+                if i < len(flat_list):
+                    new_blocks[b].append(flat_list[i])
+                    i += 1
+
+    # Sort each block (should be sorted already, but just in case)
+    for block in new_blocks:
+        block.sort()
+
+    return new_blocks
