@@ -9,6 +9,9 @@ def twoSum(nums, target):
         else:
             right -= 1
 
+If the problem asks to minimize the maximum, go right = mid - 1 on success.
+If it asks to maximize the minimum, go left = mid + 1 on success.
+
 ANSWERS
 def is_valid(x):  # x = candidate answer
     # implement the condition check
@@ -133,4 +136,34 @@ def aggressive_cows(arr, cows):
             low = mid + 1  # try for larger minimum distance
         else:
             high = mid - 1  # try for smaller distance
+    return ans
+
+def findPages(self, arr, k):
+    def is_feasible(max_sum):
+        count = 1
+        curr_sum = 0
+        for num in arr:
+            if num > max_sum:
+                return False
+            curr_sum += num
+            if curr_sum > max_sum:
+                count += 1
+                curr_sum = num
+        return count <= k
+
+    if k > len(arr):
+        return -1  # Not enough books
+
+    left = max(arr)
+    right = sum(arr)
+    ans = -1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if is_feasible(mid):
+            ans = mid
+            right = mid - 1     # ✅ Try smaller maximum
+        else:
+            left = mid + 1
+
     return ans
