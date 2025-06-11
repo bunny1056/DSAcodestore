@@ -8,3 +8,23 @@ def twoSum(nums, target):
             left += 1
         else:
             right -= 1
+
+ANSWERS
+def is_valid(x):  # x = candidate answer
+    # implement the condition check
+    return True or False
+
+def binary_search():
+    low, high = min_val, max_val
+    answer = high
+
+    while low <= high:
+        mid = (low + high) // 2
+
+        if is_valid(mid):
+            answer = mid  # or max(answer, mid) for maximum
+            high = mid - 1
+        else:
+            low = mid + 1
+
+    return answer
