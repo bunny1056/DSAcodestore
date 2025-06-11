@@ -78,3 +78,30 @@ def is_valid(day):
             low = mid + 1
 
     return answer
+
+kth positive
+def findKthPositive(arr, k):
+    missing = []
+    i = 0
+    num = 1
+    while len(missing) < k:
+        if i < len(arr) and arr[i] == num:
+            i += 1
+        else:
+            missing.append(num)
+        num += 1
+    return missing[-1]
+
+def findKthPositive(arr, k):
+    left, right = 0, len(arr) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        missing = arr[mid] - (mid + 1)
+
+        if missing < k:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return left + k
