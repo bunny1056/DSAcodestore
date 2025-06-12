@@ -57,6 +57,54 @@ def canCross(stones):
 
     return len(dp[-1]) > 0
 
+rob I
+def rob(nums):
+    n = len(nums)
+    if n == 0:
+        return 0
+    if n == 1:
+        return nums[0]
+
+    dp = [0] * n
+    dp[0] = nums[0]
+    dp[1] = max(nums[0], nums[1])
+
+    for i in range(2, n):
+        dp[i] = max(dp[i-1], nums[i] + dp[i-2])
+
+    return dp[-1]
+rob II
+def rob(nums):
+    def rob_linear(houses):
+        n = len(houses)
+        if n == 0:
+            return 0
+        if n == 1:
+            return houses[0]
+
+        dp = [0] * n
+        dp[0] = houses[0]
+        dp[1] = max(houses[0], houses[1])
+
+        for i in range(2, n):
+            dp[i] = max(dp[i-1], houses[i] + dp[i-2])
+        
+        return dp[-1]
+
+    n = len(nums)
+    if n == 0:
+        return 0
+    if n == 1:
+        return nums[0]
+
+    # Case 1: Exclude last house
+    money1 = rob_linear(nums[:-1])
+
+    # Case 2: Exclude first house
+    money2 = rob_linear(nums[1:])
+
+    return max(money1, money2)
+
 Subsets
 def isSubsetSum(arr, n, sum):
     dp = [[False] * (sum + 1) for _ in range(n + 1)]
