@@ -515,6 +515,21 @@ def LongestBitonicSequence(self, n : int, nums : List[int]) -> int:
                 max_length = max(max_length, dp_inc[i] + dp_dec[i] - 1)
         return max_length
 
+def longestStrChain(words):
+    words.sort(key=len)  # Sort by word length
+    dp = {}  # dp[word] = max chain ending at word
+    max_len = 1
+
+    for word in words:
+        dp[word] = 1  # Minimum chain is the word itself
+        for i in range(len(word)):
+            prev = word[:i] + word[i+1:]  # Remove one character
+            if prev in dp:
+                dp[word] = max(dp[word], dp[prev] + 1)
+        max_len = max(max_len, dp[word])
+
+    return max_len
+
 longest common subsequence
 def lcs_tabulation(X, Y):
     m = len(X)
