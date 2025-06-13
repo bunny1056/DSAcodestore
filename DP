@@ -105,6 +105,58 @@ def rob(nums):
 
     return max(money1, money2)
 
+Unqpaths in Grid
+def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        m = len(obstacleGrid)
+        n = len(obstacleGrid[0])
+        dp = [[0]*(n) for i in range(m)]
+        
+        for i in range(m):
+            if obstacleGrid[i][0] != 1:
+                dp[i][0]=1
+            else:
+                break
+        for j in range(n):
+            if obstacleGrid[0][j] != 1:
+                dp[0][j]=1
+            else:
+                break
+        for i in range(1,m):
+            for j in range(1,n):
+                if obstacleGrid[i][j] == 1:
+                    dp[i][j] = 0
+                else:
+                    dp[i][j]=dp[i-1][j]+dp[i][j-1]
+        return dp[m-1][n-1]                        
+
+MinPathSum
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+        dp = [[0]*n for _ in range(m)]
+    
+        dp[0][0] = grid[0][0]
+        for i in range(1,m):
+            dp[i][0]= grid[i][0]+dp[i-1][0]
+        for j in range(1,n):
+            dp[0][j]= grid[0][j]+dp[0][j-1]
+
+        for i in range(1,m):
+            for j in range(1,n):
+                dp[i][j] = grid[i][j] + min(dp[i-1][j]+dp[i][j-1])
+        return dp[m-1][n-1]        
+Triangle
+def minimumTotal(triangle):
+    # Start from the second last row and move upwards
+    for row in range(len(triangle) - 2, -1, -1):
+        for col in range(len(triangle[row])):
+            # Update the current cell with the min path sum from the two adjacent cells below
+            triangle[row][col] += min(triangle[row + 1][col], triangle[row + 1][col + 1])
+    
+    # The top element now contains the minimum path sum
+    return triangle[0][0]
+
 Subsets
 def isSubsetSum(arr, n, sum):
     dp = [[False] * (sum + 1) for _ in range(n + 1)]
@@ -120,6 +172,19 @@ def isSubsetSum(arr, n, sum):
                 dp[i][j] = dp[i - 1][j] or dp[i - 1][j - arr[i - 1]]
 
     return dp[n][sum]
+#backtrack
+subset = []
+    i, j = n, total
+    while i > 0 and j > 0:
+        # If value came from dp[i-1][j], element not included
+        if dp[i - 1][j]:
+            i -= 1
+        else:
+            subset.append(arr[i - 1])  # Element included
+            j -= arr[i - 1]
+            i -= 1
+
+    return True, subset[::-1]
 
 What is dp[i - 1][j - arr[i - 1]]?
 The DP table dp[i][j] answers: "Can we make sum j using the first i elements of the array?"
@@ -157,6 +222,16 @@ target = (d + sum(arr))//2
 req = (sum(nums)+target) // 2
         if (sum(nums)+target) % 2 == 1 or sum(nums) < abs(target):
             return 0
+def subset_style_dp(values, target):
+    # Initialize dp array
+    dp = [False] * (target + 1)
+    dp[0] = True  # Base case: sum 0 is always possible (empty subset)
+
+    for val in values:
+        for t in range(target, val - 1, -1):  # reverse to avoid reuse # forward for reuse
+            dp[t] = dp[t] or dp[t - val]
+
+    return dp[target]
 
 Coin change I
 def coinChange(self, coins: List[int], amount: int) -> int:
@@ -599,3 +674,22 @@ def matrixChainMultiplication(dimensions: list[int]) -> int:
     
     return dp[0][n-1]
 
+scheduling DP
+def paintWalls(cost, time):
+    n = len(cost)
+    INF = float('inf')
+
+    # dp[i]: min cost to paint i walls
+    dp = [INF] * (n + 1)
+    dp[0] = 0
+
+    for i in range(n):
+        new_dp = dp[:]  # copy previous dp
+        for j in range(n + 1):
+            if dp[j] == INF:
+                continue
+            paintable = min(j + time[i] + 1, n)  # one paid + time[i] free
+            new_dp[paintable] = min(new_dp[paintable], dp[j] + cost[i])
+        dp = new_dp
+
+    return dp[n]
