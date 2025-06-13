@@ -145,6 +145,29 @@ def isValid(s: str) -> bool:
             return False  # Invalid character
     return not stack
 
+def parseBoolExpr(expression: str) -> bool:
+    stack = []
+    for char in expression:
+        if char == ',':
+            continue
+        elif char == ')':
+            operands = set()
+            while stack[-1] != '(':
+                operands.add(stack.pop())
+            stack.pop()  # remove '('
+            operator = stack.pop()
+            
+            if operator == '!':
+                stack.append('t' if 'f' in operands else 'f')
+            elif operator == '&':
+                stack.append('f' if 'f' in operands else 't')
+            elif operator == '|':
+                stack.append('t' if 't' in operands else 'f')
+        else:
+            stack.append(char)
+    
+    return stack[0] == 't'
+
 Min_stack
 class MinStack:
 
