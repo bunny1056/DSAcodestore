@@ -698,10 +698,9 @@ def matrixChainMultiplication(dimensions: list[int]) -> int:
     for i in range(n):
         dp[i][i] = 0
     
-    # Length of chain (from 2 to n)
-    for length in range(2, n + 1):
-        for i in range(n - length + 1):
-            j = i + length - 1
+    for length in range(2, n + 1):        # loop over subchain lengths
+        for i in range(n - length + 1):   # loop over subchain starting index
+        j = i + length - 1            # calculate end index of chain
             for k in range(i, j):
                 cost = (dp[i][k] + dp[k+1][j] + 
                         dimensions[i] * dimensions[k+1] * dimensions[j+1])
