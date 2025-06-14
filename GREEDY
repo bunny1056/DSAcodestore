@@ -375,3 +375,19 @@ def findOrder(height, infront):
 Sort by Height in Descending Order: First, we sort all people in descending order of their height. For people of the same height, we sort them in ascending order of their "infront" values (though the problem states all heights are unique, so this might not be necessary here).
 
 Insert into the Result List: For each person in the sorted list, we insert them into the result list at the position specified by their "infront" value. This works because all taller people have already been placed, and inserting at the "infront" position ensures that exactly that many taller people are in front of them.
+
+def longestZigZag(arr):
+    n = len(arr)
+    if n < 2:
+        return n
+
+    count = 1  # At least one element is part of the subsequence
+    prev_diff = 0
+
+    for i in range(1, n):
+        diff = arr[i] - arr[i - 1]
+        if (diff > 0 and prev_diff <= 0) or (diff < 0 and prev_diff >= 0):
+            count += 1
+            prev_diff = diff
+
+    return count
