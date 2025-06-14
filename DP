@@ -59,6 +59,19 @@ def frogJumpK(heights, k):
             dp[i] = min(dp[i], cost)
 
     return dp[n-1]
+def canJump(nums: List[int]) -> bool:
+    n = len(nums)
+    dp = [False] * n
+    dp[0] = True  # Start position is always reachable
+
+    for i in range(n):
+        if not dp[i]:
+            continue  # skip if not reachable
+        # Mark all positions reachable from i
+        for j in range(i + 1, min(n, i + nums[i] + 1)):
+            dp[j] = True
+
+    return dp[-1]  # Check if last index is reachable
 
 def canCross(stones):
     if not stones or stones[1] != 1:
@@ -78,6 +91,28 @@ def canCross(stones):
                         dp[stone_index[next_pos]].add(next_jump)
 
     return len(dp[-1]) > 0
+
+def numDecodings(s: str) -> int:
+    n = len(s)
+    if n == 0 or s[0] == '0':
+        return 0
+
+    # dp[i] = number of ways to decode up to s[:i]
+    dp = [0] * (n + 1)
+    dp[0] = 1  # empty string has 1 way
+    dp[1] = 1  # first digit is guaranteed not '0' here
+
+    for i in range(2, n + 1):
+        # Check 1-digit decode (s[i-1])
+        if s[i-1] != '0':
+            dp[i] += dp[i-1]
+
+        # Check 2-digit decode (s[i-2:i])
+        two_digit = int(s[i-2:i])
+        if 10 <= two_digit <= 26:
+            dp[i] += dp[i-2]
+
+    return dp[n]
 
 def count_towers(n):
     dp = [0] * (n + 1)
