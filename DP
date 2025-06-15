@@ -662,7 +662,7 @@ def wordBreak(s: str, wordDict: List[str]) -> bool:
     # Final answer: can we segment the entire string?
     return dp[n]
 
-
+DP on strings
 longest common subsequence
 def lcs_tabulation(X, Y):
     m = len(X)
