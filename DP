@@ -186,6 +186,21 @@ def rob(nums):
 
     return max(money1, money2)
 
+Coin game
+def findWinner(n, x, y):
+    dp = [False] * (n + 1)  # dp[i] = True means current player can win with i coins
+
+    for i in range(1, n + 1):
+        # If any move leads to a losing position for opponent, current player can win
+        if i >= 1 and not dp[i - 1]:
+            dp[i] = True
+        elif i >= x and not dp[i - x]:
+            dp[i] = True
+        elif i >= y and not dp[i - y]:
+            dp[i] = True
+
+    return "Geek" if dp[n] else "Friend"
+
 Unqpaths in Grid
 def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
         m = len(obstacleGrid)
