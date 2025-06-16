@@ -936,6 +936,7 @@ def maxCoins(arr):
 
     return dp[0][n - 1]
 
+palindrome partitioning II
 def minCut(s: str) -> int:
     n = len(s)
 
@@ -964,26 +965,6 @@ def minCut(s: str) -> int:
             dp[i] = min_cut
 
     return dp[n - 1]
-
-scheduling DP
-def paintWalls(cost, time):
-    n = len(cost)
-    INF = float('inf')
-
-    # dp[i]: min cost to paint i walls
-    dp = [INF] * (n + 1)
-    dp[0] = 0
-
-    for i in range(n):
-        new_dp = dp[:]  # copy previous dp
-        for j in range(n + 1):
-            if dp[j] == INF:
-                continue
-            paintable = min(j + time[i] + 1, n)  # one paid + time[i] free
-            new_dp[paintable] = min(new_dp[paintable], dp[j] + cost[i])
-        dp = new_dp
-
-    return dp[n]
 
 def binarySearch(jobs, idx):
     low = 0
@@ -1109,3 +1090,28 @@ def superEggDrop(n: int, k: int) -> int:
             dp[i][j] = res
 
     return dp[n][k]
+
+def solveWordWrap(arr, k):
+    n = len(arr)
+    dp = [float('inf')] * (n + 1)
+    dp[n] = 0  # No cost after the last word
+
+    for i in range(n - 1, -1, -1):
+        line_len = 0
+        for j in range(i, n):
+            line_len += arr[j]
+            if j > i:
+                line_len += 1  # Add a space between words
+
+            if line_len > k:
+                break
+
+            # If last line, no extra cost
+            if j == n - 1:
+                cost = 0
+            else:
+                cost = (k - line_len) ** 2
+
+            dp[i] = min(dp[i], cost + dp[j + 1])
+
+    return dp[0]
