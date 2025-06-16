@@ -54,3 +54,24 @@ def minCost(coin, n, k):
     for i in range(coins_needed - 1 + 1): 
         ans += coin[i]
     return ans
+
+Job Scheduling
+def jobSequencing(self, deadline, profit):
+        # code here
+        jobs = list(zip(deadline,profit))
+        jobs.sort()
+        
+        pq = []
+        ans = [0,0]
+        
+        for job in jobs:
+            if job[0] > len(pq):
+                heapq.heappush(pq,job[1])
+            elif pq and pq[0] < job[1]:
+                heapq.heappushpop(pq,job[1])
+        
+        while pq:
+            ans[1] += heapq.heappop(pq)
+            ans[0] += 1
+        
+        return ans
