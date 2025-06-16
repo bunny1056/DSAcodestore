@@ -895,6 +895,67 @@ def maximalSquare(matrix):
 
     return max_side * max_side  # Area
 
+def largestZeroSumSubmatrix(matrix):
+    R = len(matrix)
+    C = len(matrix[0])
+    max_area = 0
+
+    for top in range(R):
+        temp = [0] * C
+        for bottom in range(top, R):
+            # Update temp with row sums from top to bottom
+            for col in range(C):
+                temp[col] += matrix[bottom][col]
+
+            # Apply subarray with sum = 0 logic on temp
+            prefix_sum = 0
+            sum_map = {0: -1}  # prefix_sum -> first index
+            for col in range(C):
+                prefix_sum += temp[col]
+                if prefix_sum in sum_map:
+                    # Width of subarray with sum 0
+                    width = col - sum_map[prefix_sum]
+                    height = bottom - top + 1
+                    area = width * height
+                    max_area = max(max_area, area)
+                else:
+                    sum_map[prefix_sum] = col
+
+    return max_area
+
+def largestSubmatrixEqual01(mat):
+    rows, cols = len(mat), len(mat[0])
+
+    # Step 1: Convert 0s to -1
+    for i in range(rows):
+        for j in range(cols):
+            if mat[i][j] == 0:
+                mat[i][j] = -1
+
+    max_area = 0
+
+    # Step 2: Fix two rows and reduce the matrix to 1D problem
+    for top in range(rows):
+        temp = [0] * cols  # reset for each new top row
+        for bottom in range(top, rows):
+            # Column-wise sum between top and bottom row
+            for col in range(cols):
+                temp[col] += mat[bottom][col]
+
+            # Step 3: Use hashmap to find longest subarray with sum = 0
+            prefix_sum = 0
+            sum_index = {0: -1}  # base case
+            for col in range(cols):
+                prefix_sum += temp[col]
+                if prefix_sum in sum_index:
+                    length = col - sum_index[prefix_sum]
+                    area = length * (bottom - top + 1)
+                    max_area = max(max_area, area)
+                else:
+                    sum_index[prefix_sum] = col
+
+    return max_area
+
 Matrix Multiplication
 def matrixChainMultiplication(dimensions: list[int]) -> int:
     n = len(dimensions) - 1  # Number of matrices
@@ -914,6 +975,68 @@ def matrixChainMultiplication(dimensions: list[int]) -> int:
     
     return dp[0][n-1]
 
+burst balloons
+def maxCoins(nums):
+    nums = [1] + nums + [1]
+    n = len(nums)
+    dp = [[0] * n for _ in range(n)]
+
+    for length in range(2, n):  # interval size
+        for i in range(n - length):
+            j = i + length
+            for k in range(i + 1, j):  # burst k last
+                dp[i][j] = max(dp[i][j],
+                               nums[i] * nums[k] * nums[j] + dp[i][k] + dp[k][j])
+
+    return dp[0][n - 1]
+
+min cost to cut the stick
+def minCost(n: int, cuts: list[int]) -> int:
+    # Add virtual ends
+    cuts = [0] + sorted(cuts) + [n]
+    m = len(cuts)
+
+    # dp[i][j] = min cost to cut stick from cuts[i] to cuts[j]
+    dp = [[0] * m for _ in range(m)]
+
+    # interval length: from 2 to m
+    for length in range(2, m):
+        for i in range(m - length):
+            j = i + length
+            dp[i][j] = float('inf')
+            for k in range(i + 1, j):  # Try every cut position in between
+                cost = cuts[j] - cuts[i] + dp[i][k] + dp[k][j]
+                dp[i][j] = min(dp[i][j], cost)
+
+    return dp[0][m - 1]
+
+optimal BST
+def optimalBST(keys, freq):
+    n = len(keys)
+    # dp[i][j] = min cost of BST containing keys[i..j]
+    dp = [[0 for _ in range(n)] for _ in range(n)]
+    # sum_freq[i][j] = sum of freq[i..j]
+    sum_freq = [[0 for _ in range(n)] for _ in range(n)]
+
+    for i in range(n):
+        sum_freq[i][i] = freq[i]
+        for j in range(i + 1, n):
+            sum_freq[i][j] = sum_freq[i][j - 1] + freq[j]
+
+    for length in range(1, n + 1):  # length of the subarray
+        for i in range(n - length + 1):
+            j = i + length - 1
+            dp[i][j] = float('inf')
+
+            for r in range(i, j + 1):  # Try every key as root
+                left = dp[i][r - 1] if r > i else 0
+                right = dp[r + 1][j] if r < j else 0
+                cost = left + right + sum_freq[i][j]
+                dp[i][j] = min(dp[i][j], cost)
+
+    return dp[0][n - 1]
+
+coin game max coins
 def maxCoins(arr):
     n = len(arr)
     dp = [[0] * n for _ in range(n)]
