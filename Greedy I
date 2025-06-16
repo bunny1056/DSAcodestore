@@ -106,3 +106,20 @@ def egyptian_fraction(a, b):
         b = b * x
 
     return result
+
+def smallestNumber(s, d):
+    if s == 0:
+        return "0" if d == 1 else "-1"
+    if s > 9 * d:
+        return "-1"
+
+    result = []
+
+    for i in range(d):
+        # Digits left = d - i - 1
+        min_digit = max(0, s - 9 * (d - i - 1))
+        digit = min(9, min_digit)
+        result.append(str(digit))
+        s -= digit
+
+    return ''.join(result)
