@@ -1115,3 +1115,46 @@ def solveWordWrap(arr, k):
             dp[i] = min(dp[i], cost + dp[j + 1])
 
     return dp[0]
+
+mobile number keypad
+def getCount(n):
+    if n <= 0:
+        return 0
+    if n == 1:
+        return 10  # All digits (0-9) are valid single-length numbers
+
+    # Adjacency list defining allowed moves from each key
+    moves = {
+        0: [0, 8],
+        1: [1, 2, 4],
+        2: [2, 1, 3, 5],
+        3: [3, 2, 6],
+        4: [4, 1, 5, 7],
+        5: [5, 2, 4, 6, 8],
+        6: [6, 3, 5, 9],
+        7: [7, 4, 8],
+        8: [8, 5, 7, 9, 0],
+        9: [9, 6, 8]
+    }
+
+    # Initialize dp table with -1 (meaning uncomputed)
+    dp = [[-1 for _ in range(n + 1)] for _ in range(10)]
+
+    def count(digit, length):
+        if length == 1:
+            return 1
+        if dp[digit][length] != -1:
+            return dp[digit][length]
+
+        total = 0
+        for nei in moves[digit]:
+            total += count(nei, length - 1)
+
+        dp[digit][length] = total
+        return total
+
+    result = 0
+    for digit in range(10):
+        result += count(digit, n)
+
+    return result
