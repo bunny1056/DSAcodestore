@@ -112,14 +112,20 @@ def smallestNumber(s, d):
         return "0" if d == 1 else "-1"
     if s > 9 * d:
         return "-1"
-
-    result = []
-
+    res = []
+    remaining_sum = s
     for i in range(d):
-        # Digits left = d - i - 1
-        min_digit = max(0, s - 9 * (d - i - 1))
-        digit = min(9, min_digit)
-        result.append(str(digit))
-        s -= digit
-
-    return ''.join(result)
+        if i == 0:
+            # First digit can't be zero
+            min_digit = 1
+        else:
+            min_digit = 0
+        # The remaining digits (d - i - 1) can contribute at most 9 each
+        remaining_digits = d - i - 1
+        for digit in range(min_digit, 10):
+            remaining_after = remaining_sum - digit
+            if 0 <= remaining_after <= 9 * remaining_digits:
+                res.append(str(digit))
+                remaining_sum = remaining_after
+                break
+    return ''.join(res)
