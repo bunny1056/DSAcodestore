@@ -1,3 +1,6 @@
+BS on weighted mean , Equalize the towers
+
+
 # Palindrome Partitioning I - All Palindromic Partitions (Backtracking)
 def partition(s):
     res = []
