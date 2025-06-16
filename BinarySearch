@@ -168,6 +168,32 @@ def findPages(self, arr, k):
 
     return ans
 
+Equalize the towers:
+def minCost(heights, cost):
+    def total_cost(x):
+        return sum(abs(h - x) * c for h, c in zip(heights, cost))
+
+    def is_valid(x):
+        # x is a candidate height. We compare its cost with neighbors to decide direction.
+        return total_cost(x) <= total_cost(x + 1)
+
+    def binary_search():
+        low, high = min(heights), max(heights)
+        answer = high
+
+        while low <= high:
+            mid = (low + high) // 2
+
+            if is_valid(mid):
+                answer = mid
+                high = mid - 1
+            else:
+                low = mid + 1
+
+        return total_cost(answer)
+
+    return binary_search()
+
 def findMedianSortedArrays(nums1, nums2):
     if len(nums1) > len(nums2):
         nums1, nums2 = nums2, nums1  # Always binary search the smaller array
