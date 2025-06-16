@@ -1,1 +1,32 @@
+Activity Selection/ Interval Scheduling
+Goal: Maximize count of non-overlapping intervals
+Intuition: Pick job that finishes earliest
 
+def activitySelection(start, finish):
+    n = len(start)
+    intervals = list(zip(start, finish))
+    intervals.sort(key=lambda x: x[1])
+
+    count = 1
+    end = intervals[0][1]
+
+    for i in range(1, n):
+        if intervals[i][0] >= end:
+            count += 1
+            end = intervals[i][1]
+
+    return count
+
+def minSum(self, arr, n):
+        # Your code goes here
+        if n == 1:
+            return arr[0]
+        heapq.heapify(arr)
+        num1, num2 = [], []
+    
+        while arr:
+            num1.append(str(heapq.heappop(arr)))
+            if arr:
+                num2.append(str(heapq.heappop(arr)))
+    
+        return int("".join(num1)) + int("".join(num2))
