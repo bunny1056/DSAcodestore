@@ -48,6 +48,28 @@ def combinationSum(self, arr, target):
     backtrack(0, [], 0)
     return res
 
+def palinParts (self, s):
+        # code here
+        def is_Palindrome(s):
+            return s == s[::-1]
+        
+        def backtrack(idx,path):
+            if idx == len(s):
+                res.append(path[:])
+                return
+            
+            temp = ""
+            for i in range(idx,len(s)):
+                temp += s[i]
+                if is_Palindrome(temp):
+                    path.append(temp)
+                    backtrack(i+1,path)
+                    path.pop()
+            
+        res = []
+        backtrack(0,[])
+        return res
+
 CrossWord Puzzle
 
 1. Preprocess the Grid to Identify All Valid Slots
