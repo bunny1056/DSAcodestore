@@ -92,3 +92,33 @@ class Solution:
         used_rows = set()
         backtrack(0, [])
         return res
+
+def graphColoring(self, v, edges, m):
+        # code here
+        adj = defaultdict(list)
+        for u, b in edges:
+            adj[u].append(b)
+            adj[b].append(u)
+        
+        def is_safe(node,color,col):
+            for nei in adj[node]:
+                if col[nei] == color:
+                    return False
+            return True
+        
+        def backtrack(node,col):
+            if node == v:
+                return True
+            
+            for color in range(1,m+1):
+                if is_safe(node,color,col):
+                    col[node] = color
+                
+                    if backtrack(node+1,col):
+                        return True
+                
+                col[node] = 0
+            return False
+        
+        col = [0] * v
+        return backtrack(0,col)
