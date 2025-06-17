@@ -184,3 +184,71 @@ def min_cost_to_cut_chocolate(horizontal_cuts, vertical_cuts):
         j += 1
 
     return cost
+
+from collections import deque, defaultdict
+
+def minEdgeReversals(N, M, edges, src, dst):
+    graph = defaultdict(list)
+
+    # Build the modified graph
+    for u, v in edges:
+        graph[u].append((v, 0))  # original direction, no cost
+        graph[v].append((u, 1))  # reversed edge, cost = 1
+
+    # 0-1 BFS
+    dq = deque()
+    dq.append((src, 0))  # (node, cost)
+    visited = [False] * (N + 1)
+
+    while dq:
+        node, cost = dq.popleft()
+
+        if node == dst:
+            return cost
+
+        if visited[node]:
+            continue
+        visited[node] = True
+
+        for nei, wt in graph[node]:
+            if not visited[nei]:
+                if wt == 0:
+                    dq.appendleft((nei, cost))  # 0-cost edge
+                else:
+                    dq.append((nei, cost + 1))  # 1-cost edge
+
+    return -1  # if dst is unreachable
+
+def minCashFlow(graph):
+    N = len(graph)
+    
+    # Step 1: Compute net balance
+    amount = [0] * N
+    for i in range(N):
+        for j in range(N):
+            amount[i] += graph[j][i] - graph[i][j]
+
+    # Only consider non-zero balances
+    def get_max_credit_debit():
+        max_credit = max([(i, amt) for i, amt in enumerate(amount)], key=lambda x: x[1])
+        max_debit = min([(i, amt) for i, amt in enumerate(amount)], key=lambda x: x[1])
+        return max_credit[0], max_debit[0]
+
+    res = []
+
+    def settle():
+        mxC, mxD = get_max_credit_debit()
+
+        if amount[mxC] == 0 and amount[mxD] == 0:
+            return
+
+        min_amt = min(amount[mxC], -amount[mxD])
+        amount[mxC] -= min_amt
+        amount[mxD] += min_amt
+        res.append((mxD, mxC, min_amt))
+
+        settle()
+
+    settle()
+
+    return res
