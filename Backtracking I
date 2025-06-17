@@ -66,3 +66,29 @@ If the word can be placed (i.e., cells are either - or already contain the same 
 Recurse to the next slot.
 If recursion fails, backtrack by undoing the placement and trying the next possibility.
 If all slots are filled and all words are used → Success.
+
+class Solution:
+    def solveNQueensPerm(self, n):
+        def backtrack(col, path):
+            if col == n:
+                res.append(path[:])
+                return
+            for row in range(1, n+1):  # 1-based row index
+                if row in used_rows:
+                    continue
+                valid = True
+                for c, r in enumerate(path):  # previous queens
+                    if abs(r - row) == abs(c - col):
+                        valid = False
+                        break
+                if valid:
+                    used_rows.add(row)
+                    path.append(row)
+                    backtrack(col + 1, path)
+                    path.pop()
+                    used_rows.remove(row)
+
+        res = []
+        used_rows = set()
+        backtrack(0, [])
+        return res
