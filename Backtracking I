@@ -216,3 +216,35 @@ class Solution:
             return board
         else:
             return [[-1]]
+
+from typing import List
+
+class Solution:
+    def canPartitionKSubsets(self, arr: List[int], k: int) -> bool:
+        total = sum(arr)
+        if total % k != 0:
+            return False
+        target = total // k
+        arr.sort(reverse=True)
+        
+        if arr[0] > target:
+            return False  # optimization: early check
+        
+        buckets = [0] * k
+        
+        def backtrack(index):
+            if index == len(arr):
+                return all(bucket == target for bucket in buckets)
+            
+            for i in range(k):
+                if buckets[i] + arr[index] <= target:
+                    buckets[i] += arr[index]
+                    if backtrack(index + 1):
+                        return True
+                    buckets[i] -= arr[index]
+                    
+                    if buckets[i] == 0:
+                        break  # optimization: avoid symmetric cases
+            
+            return False  
+        return backtrack(0)
