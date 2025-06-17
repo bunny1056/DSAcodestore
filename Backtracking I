@@ -311,4 +311,28 @@ def tugOfWar(arr):
     for num in subset1:
         subset2.remove(num)
 
+largest number with atmost Kswaps
+class Solution:
+    def findMaximumNum(self, s: str, k: int) -> str:
+        max_num = [s]  # To keep track of the maximum number seen
+
+        def backtrack(arr, k):
+            if k == 0:
+                return
+
+            n = len(arr)
+            for i in range(n):
+                max_digit = max(arr[i:])
+                if arr[i] != max_digit:
+                    for j in range(n - 1, i, -1):
+                        if arr[j] == max_digit:
+                            arr[i], arr[j] = arr[j], arr[i]
+                            new_s = ''.join(arr)
+                            if new_s > max_num[0]:
+                                max_num[0] = new_s
+                            backtrack(arr, k - 1)
+                            arr[i], arr[j] = arr[j], arr[i]  # Backtrack
+
+        backtrack(list(s), k)
+        return max_num[0]
     
