@@ -276,3 +276,39 @@ class Solution:
             
             return False  
         return backtrack(0)
+
+def tugOfWar(arr):
+    n = len(arr)
+    total = sum(arr)
+
+    min_diff = [float('inf')]
+    final_subset = [[]]
+
+    def backtrack(idx, count, curr_sum, selected):
+        if count == n // 2:
+            other_sum = total - curr_sum
+            diff = abs(curr_sum - other_sum)
+            if diff < min_diff[0]:
+                min_diff[0] = diff
+                final_subset[0] = selected[:]
+            return
+
+        if idx == n:
+            return
+
+        # Include arr[idx]
+        selected.append(arr[idx])
+        backtrack(idx + 1, count + 1, curr_sum + arr[idx], selected)
+        selected.pop()
+
+        # Exclude arr[idx]
+        backtrack(idx + 1, count, curr_sum, selected)
+
+    backtrack(0, 0, 0, [])
+
+    subset1 = final_subset[0]
+    subset2 = arr[:]
+    for num in subset1:
+        subset2.remove(num)
+
+    
