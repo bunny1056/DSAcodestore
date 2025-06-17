@@ -129,3 +129,24 @@ def smallestNumber(s, d):
                 remaining_sum = remaining_after
                 break
     return ''.join(res)
+
+def lexicographically_smallest_array(arr, k):
+    n = len(arr)
+    i = 0
+
+    while i < n and k > 0:
+        # Find the position of the smallest element in range [i, i+k]
+        pos = i
+        for j in range(i + 1, min(n, i + k + 1)):
+            if arr[j] < arr[pos]:
+                pos = j
+        
+        # Move the smallest element to position i
+        for j in range(pos, i, -1):
+            arr[j], arr[j - 1] = arr[j - 1], arr[j]
+        
+        # Reduce k by number of swaps used
+        k -= (pos - i)
+        i += 1
+
+    return arr
