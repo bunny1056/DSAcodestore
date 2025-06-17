@@ -1,3 +1,5 @@
+remove invalid parenthesis
+
 Rat in a maze
 def findPaths(mat, n):
     def is_valid(r, c):
