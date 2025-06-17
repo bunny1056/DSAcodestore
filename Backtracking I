@@ -1,0 +1,68 @@
+Rat in a maze
+def findPaths(mat, n):
+    def is_valid(r, c):
+        return 0 <= r < n and 0 <= c < n and mat[r][c] == 1 and not visited[r][c]
+
+    def backtrack(r, c, path):
+        if r == n - 1 and c == n - 1:
+            result.append(path)
+            return
+
+        for dir_idx in range(4):
+            dr, dc = dirs[dir_idx]
+            nr, nc = r + dr, c + dc
+            move = dir_letters[dir_idx]
+
+            if is_valid(nr, nc):
+                visited[nr][nc] = True
+                backtrack(nr, nc, path + move)
+                visited[nr][nc] = False  # backtrack
+
+    if mat[0][0] == 0 or mat[n-1][n-1] == 0:
+        return []
+
+    result = []
+    visited = [[False] * n for _ in range(n)]
+    dirs = [(1, 0), (0, -1), (0, 1), (-1, 0)]  # D, L, R, U
+    dir_letters = ['D', 'L', 'R', 'U']
+
+    visited[0][0] = True
+    backtrack(0, 0, "")
+    return sorted(result)
+
+def combinationSum(self, arr, target):
+    def backtrack(start, path, total):
+        if total == target:
+            res.append(path[:])
+            return
+        if total > target:
+            return
+        
+        for i in range(start, len(arr)):
+            path.append(arr[i])
+            backtrack(i, path, total + arr[i])  # reuse allowed if not allowed use i+1
+            path.pop()
+
+    res = []
+    arr = sorted(set(arr))  # optional: remove duplicates and sort
+    backtrack(0, [], 0)
+    return res
+
+CrossWord Puzzle
+
+1. Preprocess the Grid to Identify All Valid Slots
+A slot is a contiguous sequence of - cells where a word can be placed.
+We extract:
+Horizontal slots: scan each row for contiguous -.
+Vertical slots: scan each column for contiguous -.
+Store each slot as:
+(start_row, start_col, direction, length)
+
+2. Backtracking Algorithm
+We try placing each unused word into each slot (matching length), then recurse.
+Key Steps:
+For a given slot, try every unused word of matching length.
+If the word can be placed (i.e., cells are either - or already contain the same character), place it.
+Recurse to the next slot.
+If recursion fails, backtrack by undoing the placement and trying the next possibility.
+If all slots are filled and all words are used → Success.
