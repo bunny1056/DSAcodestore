@@ -150,3 +150,37 @@ def lexicographically_smallest_array(arr, k):
         i += 1
 
     return arr
+
+CHOCOLA problem min cost to cut in 1X1 squares (same as merge sort)
+def min_cost_to_cut_chocolate(horizontal_cuts, vertical_cuts):
+    # Sort in descending order
+    horizontal_cuts.sort(reverse=True)
+    vertical_cuts.sort(reverse=True)
+
+    h_segments = 1  # initially one vertical segment
+    v_segments = 1  # initially one horizontal segment
+
+    i = j = 0
+    cost = 0
+
+    while i < len(horizontal_cuts) and j < len(vertical_cuts):
+        if horizontal_cuts[i] > vertical_cuts[j]:
+            cost += horizontal_cuts[i] * v_segments
+            h_segments += 1
+            i += 1
+        else:
+            cost += vertical_cuts[j] * h_segments
+            v_segments += 1
+            j += 1
+
+    # Process remaining horizontal cuts
+    while i < len(horizontal_cuts):
+        cost += horizontal_cuts[i] * v_segments
+        i += 1
+
+    # Process remaining vertical cuts
+    while j < len(vertical_cuts):
+        cost += vertical_cuts[j] * h_segments
+        j += 1
+
+    return cost
