@@ -13,3 +13,15 @@
                     result.append(ch)
 
         return ''.join(result)
+
+def reverseWords(self, s: str) -> str:
+        words = s.strip().split()
+        return ' '.join(reversed(words))
+
+def largestOddNumber(self, num: str) -> str:
+        return num.rstrip("02468")
+def largestOddNumber(self, num: str) -> str:
+    for i in range(len(num) - 1, -1, -1):
+        if int(num[i]) % 2 == 1:  # Check for odd digit
+            return num[:i+1]     # Return substring up to that digit
+        return ""  # No odd digit found
