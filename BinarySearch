@@ -37,6 +37,31 @@ def searchMatrix(matrix, target):
 
     return False
 
+def findPeakGrid(mat):
+    m, n = len(mat), len(mat[0])
+    
+    left, right = 0, n - 1
+
+    while left <= right:
+        mid_col = (left + right) // 2
+
+        # Find the row index of the maximum element in the mid column
+        max_row = 0
+        for i in range(m):
+            if mat[i][mid_col] > mat[max_row][mid_col]:
+                max_row = i
+
+        left_val = mat[max_row][mid_col - 1] if mid_col - 1 >= 0 else -1
+        right_val = mat[max_row][mid_col + 1] if mid_col + 1 < n else -1
+        curr_val = mat[max_row][mid_col]
+
+        if curr_val > left_val and curr_val > right_val:
+            return [max_row, mid_col]
+        elif left_val > curr_val:
+            right = mid_col - 1
+        else:
+            left = mid_col + 1
+
 def twoSum(nums, target):
     left, right = 0, len(nums) - 1
     while left < right:
