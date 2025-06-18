@@ -55,6 +55,18 @@ def minCost(coin, n, k):
         ans += coin[i]
     return ans
 
+Assign Cookies
+def findContentChildren(g, s):
+    g.sort()
+    s.sort()
+    
+    i = j = 0  # i: child index, j: cookie index
+    while i < len(g) and j < len(s):
+        if s[j] >= g[i]:
+            i += 1  # assign cookie to child
+        j += 1  # move to next cookie
+    
+    return i  # number of content children
 
 def maxLevel(boxes, n):
     # Sort objects in increasing order of width
