@@ -55,6 +55,7 @@ def minCost(coin, n, k):
         ans += coin[i]
     return ans
 
+
 def maxLevel(boxes, n):
     # Sort objects in increasing order of width
     boxes.sort()
