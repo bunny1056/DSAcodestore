@@ -1,36 +1,28 @@
-Maximum index
-# Python program to find the maximum
-# j - i such that arr[i] <= arr[j]
-
-# Function to find the maximum
-# j - i such that arr[i] <= arr[j]
 def maxIndexDiff(arr):
     n = len(arr)
-    rMax = [0] * n
-    i, j = 0, 0
-    lMin = arr[0]
-    
-    # rMax[i] stores the maximum value
-    # in the range [i, n-1]
-    rMax[n - 1] = arr[n - 1]
+    if not arr or n == 0:
+        return 0
+
+    # Step 1: Preprocess - build right max array
+    right_max = [0] * n
+    right_max[-1] = arr[-1]
     for i in range(n - 2, -1, -1):
-        rMax[i] = max(rMax[i + 1], arr[i])
-    
-    i, j, ans = 0, 0, 0
-    
-    while i < n and j < n:
-        
-        # Compare with answer and increment j.
-        if lMin <= rMax[j]:
+        right_max[i] = max(arr[i], right_max[i + 1])
+
+    # Step 2: Traverse - initialize pointers and answer
+    i = j = ans = 0
+    left_min = arr[0]
+
+    # Step 3: Two-pointer traversal
+    while j < n:
+        if left_min <= right_max[j]:
             ans = max(ans, j - i)
             j += 1
-        
-        # Else, increment i.
         else:
             i += 1
-            if i + 1 < n:
-                lMin = min(lMin, arr[i])
-    
+            if i < n:
+                left_min = min(left_min, arr[i])
+
     return ans
 
 def second_largest(arr):
