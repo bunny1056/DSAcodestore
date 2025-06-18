@@ -1,22 +1,4 @@
-def maxIndexDiff(arr):
-    n = len(arr)
-    rMax = [0] * n
-    rMax[-1] = arr[-1]
-
-    for i in range(n - 2, -1, -1):
-        rMax[i] = max(arr[i], rMax[i + 1])
-
-    i = j = ans = 0
-
-    while i < n and j < n:
-        if arr[i] <= rMax[j]:
-            ans = max(ans, j - i)
-            j += 1
-        else:
-            i += 1
-
-    return ans
-
+Second Largest
 def second_largest(arr):
     first = second = float('-inf')
     for num in arr:
@@ -53,16 +35,32 @@ def check(nums):
     
     return is_sorted and (nums[-1] <= nums[0])
 
-def removeDuplicates(self, nums: List[int]) -> int:
-        n = len(nums)
-        if n == 0:
-            return 
-        k = 1
-        for i in range(n-1):
-            if nums[i+1] != nums[i]:
-                nums[k] = nums[i + 1]
-                k += 1
-        return k
+Next permutation
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        
+        # Step 1: Find the first index 'pivot' from the right such that nums[i - 1] < nums[i]
+        pivot = 0
+        for i in range(len(nums) - 1, 0, -1):
+            if nums[i - 1] < nums[i]:
+                pivot = i
+                break
+
+        # Step 2: If no pivot found, the list is in descending order — reverse to lowest order
+        if pivot == 0:
+            nums.reverse()
+            return
+
+        # Step 3: Find the smallest element greater than nums[pivot - 1] from the right
+        swap = len(nums) - 1
+        while nums[pivot - 1] >= nums[swap]:
+            swap -= 1
+
+        # Step 4: Swap nums[pivot - 1] with nums[swap]
+        nums[pivot - 1], nums[swap] = nums[swap], nums[pivot - 1]
+
+        # Step 5: Reverse the suffix starting at pivot
+        nums[pivot:] = reversed(nums[pivot:])
 
 Left rotate
 class Solution:
@@ -92,6 +90,17 @@ def missingNumber(self, nums: List[int]) -> int:
         expected_sum = n * (n + 1) // 2
         actual_sum = sum(nums)
         return expected_sum - actual_sum
+
+def removeDuplicates(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n == 0:
+            return 
+        k = 1
+        for i in range(n-1):
+            if nums[i+1] != nums[i]:
+                nums[k] = nums[i + 1]
+                k += 1
+        return k
 
 def findDuplicateAndMissing(arr):
     n = len(arr)
@@ -309,40 +318,8 @@ def reversePairs(nums):
             right += 1
 
         # Copy sorted part back
-
-class Solution:
-    def nextPermutation(self, nums: List[int]) -> None:
-        """
-        Do not return anything, modify nums in-place instead.
-        """
-        # 5, 2, 6, 1, 2
-
-        pivot = 0
-
-        for i in range(len(nums) - 1, 0, -1):
-            if nums[i - 1] < nums[i]:
-                pivot = i
-                break
-
-        if pivot == 0:
-            nums[::] = nums[::-1]
-            return
-
-        swap = len(nums) - 1
-
-        while nums[pivot - 1] >= nums[swap]:
-            swap -= 1
-
-        nums[pivot - 1], nums[swap] = nums[swap], nums[pivot - 1]
-        nums[pivot:] = reversed(nums[pivot:])
-
-        return
-
-        
-        nums[start:end+1] = temp
-        return count
-
     return merge_sort(0, len(nums) - 1)
+
 
 from collections import Counter
 
@@ -379,6 +356,25 @@ def rearrange_blocks(blocks):
 
     return new_blocks
 
+def maxIndexDiff(arr):
+    n = len(arr)
+    rMax = [0] * n
+    rMax[-1] = arr[-1]
+
+    for i in range(n - 2, -1, -1):
+        rMax[i] = max(arr[i], rMax[i + 1])
+
+    i = j = ans = 0
+
+    while i < n and j < n:
+        if arr[i] <= rMax[j]:
+            ans = max(ans, j - i)
+            j += 1
+        else:
+            i += 1
+
+    return ans
+
 Trap_water
 def trap(height):
     if not height:
@@ -404,3 +400,4 @@ def trap(height):
         trapped_water += min(left_max[i], right_max[i]) - height[i]
     
     return trapped_water
+
