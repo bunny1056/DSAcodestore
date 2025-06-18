@@ -176,22 +176,6 @@ def find_leaders(arr):
     
     return leaders[::-1]  # Reverse to maintain the original order
 
-Assign cookies or Maximum Matching of Players With Trainers
-def find_content_children(g, s):
-    g.sort()
-    s.sort()
-    
-    i = j = 0
-    content_children = 0
-    
-    while i < len(g) and j < len(s):
-        if s[j] >= g[i]:
-            content_children += 1
-            i += 1
-        j += 1
-    
-    return content_children
-
 Max Consecutive Ones I
 def findMaxConsecutiveOnes(nums):
     max_count = 0
