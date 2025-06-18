@@ -62,6 +62,38 @@ def findPeakGrid(mat):
         else:
             left = mid_col + 1
 
+def median(matrix):
+    rows, cols = len(matrix), len(matrix[0])
+
+    # Find global min and max from the matrix
+    low = min(row[0] for row in matrix)
+    high = max(row[-1] for row in matrix)
+
+    desired = (rows * cols) // 2  # Index of the median
+
+    def countLessEqual(row, target):
+        low, high = 0, len(row) - 1
+        while low <= high:
+            mid = (low + high) // 2
+            if row[mid] <= target:
+                low = mid + 1
+            else:
+                high = mid - 1
+        return low
+
+    while low <= high:
+        mid = (low + high) // 2
+        count = 0
+        for row in matrix:
+            count += countLessEqual(row, mid)
+
+        if count <= desired:
+            low = mid + 1
+        else:
+            high = mid - 1
+
+    return low
+
 def twoSum(nums, target):
     left, right = 0, len(nums) - 1
     while left < right:
