@@ -1,27 +1,19 @@
 def maxIndexDiff(arr):
     n = len(arr)
-    if not arr or n == 0:
-        return 0
+    rMax = [0] * n
+    rMax[-1] = arr[-1]
 
-    # Step 1: Preprocess - build right max array
-    right_max = [0] * n
-    right_max[-1] = arr[-1]
     for i in range(n - 2, -1, -1):
-        right_max[i] = max(arr[i], right_max[i + 1])
+        rMax[i] = max(arr[i], rMax[i + 1])
 
-    # Step 2: Traverse - initialize pointers and answer
     i = j = ans = 0
-    left_min = arr[0]
 
-    # Step 3: Two-pointer traversal
-    while j < n:
-        if left_min <= right_max[j]:
+    while i < n and j < n:
+        if arr[i] <= rMax[j]:
             ans = max(ans, j - i)
             j += 1
         else:
             i += 1
-            if i < n:
-                left_min = min(left_min, arr[i])
 
     return ans
 
