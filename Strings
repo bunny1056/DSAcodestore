@@ -163,3 +163,52 @@ def minAddToMakeValid(self, s: str) -> int:
             else:
                 stack.append(char)
         return len(stack)
+
+def shortestPalindrome(s: str) -> str:
+    rev = s[::-1]
+    temp = s + '#' + rev
+
+    lps = [0] * len(temp)
+    for i in range(1, len(temp)):
+        l = lps[i - 1]
+        while l > 0 and temp[i] != temp[l]:
+            l = lps[l - 1]
+        if temp[i] == temp[l]:
+            l += 1
+        lps[i] = l
+
+    to_add = rev[:len(s) - lps[-1]]
+    return to_add + s
+
+def longestHappyPrefix(s: str) -> str:
+    n = len(s)
+    lps = [0] * n
+
+    for i in range(1, n):
+        length = lps[i - 1]
+        while length > 0 and s[i] != s[length]:
+            length = lps[length - 1]
+        if s[i] == s[length]:
+            length += 1
+        lps[i] = length
+
+    return s[:lps[-1]]
+
+def countAndSay(n: int) -> str:
+    result = "1"
+    
+    for _ in range(n - 1):
+        temp = ""
+        i = 0
+        
+        while i < len(result):
+            count = 1
+            while i + 1 < len(result) and result[i] == result[i + 1]:
+                count += 1
+                i += 1
+            temp += str(count) + result[i]
+            i += 1
+        
+        result = temp
+    
+    return result
