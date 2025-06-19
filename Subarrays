@@ -335,3 +335,24 @@ def sumSubarrayMins(self, arr: List[int]) -> int:
             min_stack.append(i)
 
     return sum % (10**9 + 7)
+
+class Solution:
+    def subArrayRanges(self, nums: List[int]) -> int:
+        def get_contribution(nums, is_min=True):
+            n = len(nums)
+            stack = []
+            res = 0
+            
+            for i in range(n + 1):
+                while stack and (i == n or
+                    (nums[stack[-1]] > nums[i] if is_min else nums[stack[-1]] < nums[i])):
+                    j = stack.pop()
+                    left = stack[-1] if stack else -1
+                    right = i
+                    count = (j - left) * (right - j)
+                    res += nums[j] * count
+                if i < n:
+                    stack.append(i)
+            return res
+        
+        return get_contribution(nums, False) - get_contribution(nums, True)
