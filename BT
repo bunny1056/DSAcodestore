@@ -265,6 +265,32 @@ def leftView(root):
 
     return result
 
+from collections import deque
+
+class Solution:
+    def widthOfBinaryTree(self, root):
+        if not root:
+            return 0
+
+        max_width = 0
+        queue = deque([(root, 0)])  # (node, position)
+
+        while queue:
+            level_length = len(queue)
+            _, first_pos = queue[0]  # leftmost position at this level
+            for _ in range(level_length):
+                node, pos = queue.popleft()
+                # Normalize pos to prevent overflow
+                pos -= first_pos
+                if node.left:
+                    queue.append((node.left, 2 * pos))
+                if node.right:
+                    queue.append((node.right, 2 * pos + 1))
+            # Width = last_pos - first_pos + 1
+            max_width = max(max_width, pos + 1)
+
+        return max_width
+
 CLSSIC backtracking targetSum Qn
 def pathSum(self, root: Optional[TreeNode], targetSum: int) -> List[List[int]]:
         result = []
