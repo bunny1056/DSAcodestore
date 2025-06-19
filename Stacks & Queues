@@ -231,23 +231,6 @@ def nextGreaterElements(self, nums: List[int]) -> List[int]:
             res.append(count[index])
         return res
 
-Trap Water
-using stacks
-class Solution:
-    def trap(self, height):
-        stack = []
-        water = 0
-        for i in range(len(height)):
-            while stack and height[i] > height[stack[-1]]:
-                top = stack.pop()
-                if not stack:
-                    break
-                distance = i - stack[-1] - 1
-                bounded_height = min(height[i], height[stack[-1]]) - height[top]
-                water += distance * bounded_height
-            stack.append(i)
-        return water
-
 asteroid collision
 def asteroidCollision(asteroids):
     stack = []
@@ -335,60 +318,23 @@ class StockSpanner:
         self.stack.append((price, span))
         return span
 
-The Celebrity Problm
-def findCelebrity(mat):
-    n = len(mat)
-    stack = []
-    
-    # Step 1: Push all people onto the stack
-    for i in range(n):
-        stack.append(i)
-    
-    # Step 2: Find potential celebrity
-    while len(stack) > 1:
-        # Pop two people
-        a = stack.pop()
-        b = stack.pop()
-        
-        # If a knows b, a can't be celebrity, push b back
-        if mat[a][b] == 1:
-            stack.append(b)
-        # If a doesn't know b, b can't be celebrity, push a back
-        else:
-            stack.append(a)
-    
-    # Step 3: Verify the potential celebrity
-    if not stack:
-        return -1
-    candidate = stack.pop()
-    
+The Celebrity Problem
+def findCelebrity(M):
+    n = len(M)
+    candidate = 0
+
+    # Step 1: Find the potential celebrity
+    for i in range(1, n):
+        if M[candidate][i] == 1:
+            candidate = i
+
+    # Step 2: Verify the candidate
     for i in range(n):
         if i != candidate:
-            # Check if everyone knows candidate and candidate knows no one
-            if mat[i][candidate] == 0 or mat[candidate][i] == 1:
+            if M[candidate][i] == 1 or M[i][candidate] == 0:
                 return -1
-    
-    return candidate
 
-without stack
-def celebrity(self, mat):
-        # code here
-        n = len(mat)
-    
-    # Step 1: Find a potential celebrity
-        candidate = 0
-        for i in range(1, n):
-            if mat[candidate][i] == 1:  # If candidate knows i
-                candidate = i  # Update candidate
-        
-        # Step 2: Verify if the candidate is a celebrity
-        for i in range(n):
-            if i != candidate:
-                # Check if everyone knows candidate and candidate knows no one
-                if mat[i][candidate] == 0 or mat[candidate][i] == 1:
-                    return -1
-        
-        return candidate
+    return candidate
 
 def sort_stack(stack):
     if len(stack) <= 1:
