@@ -289,34 +289,42 @@ DEsign twitter
 import heapq
 from collections import defaultdict
 
+import heapq
+from collections import defaultdict
+
 class Twitter:
+
     def __init__(self):
         self.timestamp = 0
-        self.user_tweets = defaultdict(list)  # userId: list of (timestamp, tweetId)
-        self.user_following = defaultdict(set)  # userId: set of followeeId
+        self.tweets = defaultdict(list)  # userId -> list of (timestamp, tweetId)
+        self.following = defaultdict(set)  # userId -> set of followeeIds
 
     def postTweet(self, userId: int, tweetId: int) -> None:
-        self.user_tweets[userId].append((self.timestamp, tweetId))
+        self.tweets[userId].append((self.timestamp, tweetId))
         self.timestamp += 1
 
-    def getNewsFeed(self, userId: int) -> List[int]:
-        tweets = []
-        # Add user's own tweets
-        tweets.extend(self.user_tweets[userId])
-        # Add tweets from followees
-        for followeeId in self.user_following[userId]:
-            tweets.extend(self.user_tweets[followeeId])
-        # Get top 10 most recent tweets
-        tweets.sort(reverse=True, key=lambda x: x[0])
-        return [tweetId for (timestamp, tweetId) in tweets[:10]]
+    def getNewsFeed(self, userId: int) -> list[int]:
+        heap = []
+
+        # Get tweets from user and all followees
+        followees = self.following[userId] | {userId}
+
+        for user in followees:
+            for time, tid in self.tweets[user][-10:]:  # Take last 10 tweets
+                heapq.heappush(heap, (time, tid))
+                if len(heap) > 10:
+                    heapq.heappop(heap)  # Keep only top 10 recent tweets
+
+        # Extract tweet IDs sorted by most recent
+        return [tid for _, tid in sorted(heap, reverse=True)]
 
     def follow(self, followerId: int, followeeId: int) -> None:
         if followerId != followeeId:
-            self.user_following[followerId].add(followeeId)
+            self.following[followerId].add(followeeId)
 
     def unfollow(self, followerId: int, followeeId: int) -> None:
-        if followeeId in self.user_following[followerId]:
-            self.user_following[followerId].remove(followeeId)
+        self.following[followerId].discard(followeeId)
+
 
 Maximum Sum Combination
 import heapq
