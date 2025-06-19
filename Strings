@@ -84,3 +84,19 @@ def longestPalindrome(s: str) -> str:
 
     return longest
 
+def repeatedStringMatch(a: str, b: str) -> int:
+    repeat = 1
+    repeated = a
+
+    while len(repeated) < len(b):
+        repeated += a
+        repeat += 1
+
+    if b in repeated:
+        return repeat
+
+    repeated += a  # One more repeat for possible overlap
+    if b in repeated:
+        return repeat + 1
+
+    return -1
