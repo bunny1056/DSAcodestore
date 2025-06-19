@@ -320,3 +320,18 @@ class Solution:
             total %= MOD
 
         return total
+
+def sumSubarrayMins(self, arr: List[int]) -> int:
+    sum = 0  # Don't use `sum` as a variable name (Python has built-in `sum`)
+    min_stack = []
+    n = len(arr)
+
+    for i in range(n + 1):  # Include n as a sentinel (force final processing)
+        while min_stack and (i == n or arr[min_stack[-1]] >= arr[i]):
+            j = min_stack.pop()
+            left = min_stack[-1] if min_stack else -1
+            sum += arr[j] * (j - left) * (i - j)
+        if i < n:
+            min_stack.append(i)
+
+    return sum % (10**9 + 7)
