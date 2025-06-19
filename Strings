@@ -83,3 +83,4 @@ def longestPalindrome(s: str) -> str:
             longest = p2
 
     return longest
+
