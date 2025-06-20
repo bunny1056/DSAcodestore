@@ -435,3 +435,13 @@ def trap(height):
     
     return trapped_water
 
+def Pascal(numRows):
+    triangle = []
+
+    for i in range(numRows):
+        row = [1] * (i + 1)  # Start with all 1s
+        for j in range(1, i):  # Fill interior elements
+            row[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
+        triangle.append(row)
+
+    return triangle
