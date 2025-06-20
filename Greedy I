@@ -120,6 +120,29 @@ def egyptian_fraction(a, b):
 
     return result
 
+Fractional Knapsack
+def fractionalknapsack(self, val, wt, capacity):
+        #code here
+        n = len(val)
+        ratios = []
+        for i in range(n):
+            ratio = val[i]/wt[i]
+            ratios.append((ratio,val[i],wt[i]))
+            
+        ratios.sort(reverse=True, key=lambda x: x[0])
+
+        total_val = 0
+        rem_capacity = capacity
+        
+        for ratio, v, w in ratios:
+            if rem_capacity >= w:
+                total_val += v
+                rem_capacity -= w
+            else:
+                total_val += (v/w) * rem_capacity
+                break
+        return float(total_val)
+
 def smallestNumber(s, d):
     if s == 0:
         return "0" if d == 1 else "-1"
