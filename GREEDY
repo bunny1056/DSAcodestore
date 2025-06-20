@@ -1,5 +1,3 @@
-ratios.sort(reverse=True, key=lambda x: x[0])
-
 Fractional Knapsack
 def fractionalknapsack(self, val, wt, capacity):
         #code here
