@@ -251,6 +251,29 @@ def jobSequencing(self, deadline, profit):
         
         return ans
 
+job sequencing problm
+def job_sequencing(deadline, profit):
+    n = len(deadline)
+    jobs = list(zip(deadline, profit))
+    # Sort jobs by profit in descending order
+    jobs.sort(key=lambda x: -x[1])
+    
+    max_deadline = max(deadline)
+    slots = [False] * (max_deadline + 1)  # 1-based indexing
+    
+    count = 0
+    total_profit = 0
+    
+    for d, p in jobs:
+        # Find the latest available slot before deadline d
+        for i in range(d, 0, -1):
+            if not slots[i]:
+                slots[i] = True
+                count += 1
+                total_profit += p
+                break
+    
+    return [count, total_profit]
 def egyptian_fraction(a, b):
     result = []
     while a != 0:
@@ -534,3 +557,47 @@ def eraseOverlapIntervals(intervals: List[List[int]]) -> int:
             count += 1
 
     return count
+
+def findOrder(height, infront):
+    # Write your code here.
+    pass
+    people = list(zip(height, infront))
+    # Sort people in descending order of height, and ascending order of infront (though heights are unique)
+    people.sort(key=lambda x: (-x[0], x[1]))
+    
+    result = []
+    for p in people:
+        h, k = p
+        result.insert(k, h)
+    
+    return result
+Sort by Height in Descending Order: First, we sort all people in descending order of their height. For people of the same height, we sort them in ascending order of their "infront" values (though the problem states all heights are unique, so this might not be necessary here).
+
+Insert into the Result List: For each person in the sorted list, we insert them into the result list at the position specified by their "infront" value. This works because all taller people have already been placed, and inserting at the "infront" position ensures that exactly that many taller people are in front of them.
+
+def longestZigZag(arr):
+    n = len(arr)
+    if n < 2:
+        return n
+
+    count = 1  # At least one element is part of the subsequence
+    prev_diff = 0
+
+    for i in range(1, n):
+        diff = arr[i] - arr[i - 1]
+        if (diff > 0 and prev_diff <= 0) or (diff < 0 and prev_diff >= 0):
+            count += 1
+            prev_diff = diff
+
+    return count
+
+class Solution:
+    def findLongestChain(self, pairs: List[List[int]]) -> int:
+        pairs.sort(key=lambda x: x[1])
+        cur_end = float('-inf')
+        count = 0
+        for s, e in pairs:
+            if s > cur_end:
+                count += 1
+                cur_end = e
+        return count
