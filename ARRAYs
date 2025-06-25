@@ -72,9 +72,7 @@ def rotate(nums, k):
 missing number
 def missingNumber(self, nums: List[int]) -> int:
         n = len(nums)
-        expected_sum = n * (n + 1) // 2
-        actual_sum = sum(nums)
-        return expected_sum - actual_sum
+        return n * (n + 1) // 2 - sum(nums)
 
 def removeDuplicates(self, nums: List[int]) -> int:
         n = len(nums)
