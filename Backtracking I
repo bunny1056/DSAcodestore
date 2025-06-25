@@ -101,6 +101,41 @@ def exist(self, board: List[List[str]], word: str) -> bool:
                 visited[r][c] = False
     return False
 
+word search I
+from typing import List
+
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        m, n = len(board), len(board[0])
+
+        def dfs(r, c, index):
+            # If full word is matched
+            if index == len(word):
+                return True
+            
+            # Boundary or character mismatch
+            if r < 0 or r >= m or c < 0 or c >= n or board[r][c] != word[index]:
+                return False
+
+            # Mark as visited by temporary replacement
+            temp = board[r][c]
+            board[r][c] = '#'
+
+            # Explore all 4 directions
+            for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
+                if dfs(r + dr, c + dc, index + 1):
+                    return True
+
+            # Backtrack
+            board[r][c] = temp
+            return False
+
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] == word[0]:
+                    if dfs(i, j, 0):
+                        return True
+        return False
 from collections import defaultdict
 
 class Solution:
