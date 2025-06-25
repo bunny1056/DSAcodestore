@@ -426,3 +426,19 @@ def Pascal(numRows):
         triangle.append(row)
 
     return triangle
+
+def findCelebrity(n: int) -> int:
+    candidate = 0
+
+    # Step 1: Find potential celebrity
+    for i in range(1, n):
+        if knows(candidate, i):
+            candidate = i  # candidate knows i => candidate can't be celeb, i might be
+
+    # Step 2: Verify candidate
+    for i in range(n):
+        if i != candidate:
+            if knows(candidate, i) or not knows(i, candidate):
+                return -1
+
+    return candidate
