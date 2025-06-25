@@ -70,6 +70,37 @@ class Solution:
 
         return min(res) if res else -1
 
+wordsearch
+def exist(self, board: List[List[str]], word: str) -> bool:
+    m, n = len(board), len(board[0])
+
+    def is_valid(i, j, index):
+        return 0 <= i < m and 0 <= j < n and not visited[i][j] and board[i][j] == word[index]
+
+    def dfs(i, j, index):
+        if index == len(word):
+            return True
+        for dr, dc in dirs:
+            nr, nc = i + dr, j + dc
+            if is_valid(nr, nc, index):
+                visited[nr][nc] = True
+                if dfs(nr, nc, index + 1):
+                    return True
+                visited[nr][nc] = False  # ✅ backtrack here
+        return False
+
+    visited = [[False] * n for _ in range(m)]
+    dirs = [(-1, 0), (0, -1), (1, 0), (0, 1)]
+
+    for r in range(m):
+        for c in range(n):
+            if word[0] == board[r][c]:
+                visited[r][c] = True
+                if dfs(r, c, 1):  # ✅ start with index = 1, since first char is already matched
+                    return True
+                visited[r][c] = False
+    return False
+
 from collections import defaultdict
 
 class Solution:
