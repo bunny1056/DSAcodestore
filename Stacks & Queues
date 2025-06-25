@@ -244,7 +244,7 @@ def asteroidCollision(asteroids):
 
     return stack
 
-remove k digits 
+remove k digits to make smallest number possible
 def removeKdigits(num: str, k: int) -> str:
     stack = []
     for digit in num:
@@ -261,18 +261,17 @@ def removeKdigits(num: str, k: int) -> str:
 
 largest histogram area
 def largestRectangleArea(heights):
-    stack = [-1]
+    stack = []
     max_area = 0
-    for i in range(len(heights)):
-        while stack[-1] != -1 and heights[stack[-1]] >= heights[i]:
-            current_height = heights[stack.pop()]
-            current_width = i - stack[-1] - 1
-            max_area = max(max_area, current_height * current_width)
+    heights.append(0)  # Sentinel to flush remaining bars
+
+    for i, h in enumerate(heights):
+        while stack and heights[stack[-1]] > h:
+            height = heights[stack.pop()]
+            width = i if not stack else i - stack[-1] - 1
+            max_area = max(max_area, height * width)
         stack.append(i)
-    while stack[-1] != -1:
-        current_height = heights[stack.pop()]
-        current_width = len(heights) - stack[-1] - 1
-        max_area = max(max_area, current_height * current_width)
+
     return max_area
 
 Maximal Rectangle
@@ -280,8 +279,7 @@ def maximalRectangle(matrix):
     if not matrix:
         return 0
     
-    rows = len(matrix)
-    cols = len(matrix[0])
+    rows, cols = len(matrix), len(matrix[0])
     heights = [0] * cols
     max_area = 0
     
@@ -314,6 +312,19 @@ class StockSpanner:
         self.stack.append((price, span))
         return span
 
+iterative using another stack
+def sortStack(stack):
+    temp_stack = []
+
+    while stack:
+        tmp = stack.pop()
+        while temp_stack and temp_stack[-1] > tmp:
+            stack.append(temp_stack.pop())
+        temp_stack.append(tmp)
+
+    return temp_stack
+
+recursive
 def sort_stack(stack):
     if len(stack) <= 1:
         return
