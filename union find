@@ -1,0 +1,30 @@
+What is Union-Find?
+Union-Find has two main operations:
+
+Union(x, y): Merges the groups containing elements x and y into a single group.
+Find(x): Determines the "representative" (or root) of the group that x belongs to.
+By tracking these groups, we can count how many separate clusters (provinces) exist at the end.
+
+Key Components
+Parent Array: Each element (city) has a parent pointer. Initially, every city is its own parent (a group of one).
+Find with Path Compression: When finding a city’s root, we optimize by making all nodes in the path point directly to the root.
+Union: Merges two groups by setting the root of one group to point to the root of the other.
+
+class Solution:
+    def findCircleNum(self, isConnected):
+        n = len(isConnected)
+        parent = list(range(n))  # Initial parent array
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])  # Path compression
+            return parent[x]
+        def union(x, y):
+            parent[find(x)] = find(y)
+        # Process connections
+        for i in range(n):
+            for j in range(i + 1, n):  # Avoid duplicates due to symmetry
+                if isConnected[i][j] == 1:
+                    union(i, j)
+        # Count distinct roots
+        provinces = len(set(find(i) for i in range(n)))
+        return provinces
