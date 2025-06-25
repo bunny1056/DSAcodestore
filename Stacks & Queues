@@ -6,10 +6,8 @@ class Stack:
         self.stack.append(val)
     
     def pop(self):
-        if len(self.stack) != 0:
-            return self.stack.pop()
-        return -1
-
+        return self.stack.pop() if len(self.stack) != 0 else -1
+        
 class Queue:
     def __init__(self):
         self.queue = []
@@ -17,9 +15,7 @@ class Queue:
         self.queue.append(val)
     
     def dequeue(self):
-        if not self.is_empty():
-            return self.queue.pop(0) ## or popleft()
-        return -1
+        return self.queue.popleft() if not self.is_empty() else -1
 
 stack using queue
 from collections import deque
