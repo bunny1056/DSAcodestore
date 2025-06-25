@@ -258,16 +258,14 @@ def setZeroes(self, matrix: List[List[int]]) -> None:
 def rotate(matrix):
     matrix[:] = [list(row) for row in zip(*matrix[::-1])]
 def rotate(self, m: List[List[int]]) -> None:
-        for i in range(len(m)):
-            for j in range(i+1,len(m)):
-                a=m[i][j]
-                m[i][j]=m[j][i]
-                m[j][i]=a
-        for i in range(len(m)):
-            for j in range(len(m)//2):
-                a=m[i][j]
-                m[i][j]=m[i][len(m)-1-j]
-                m[i][len(m)-1-j]=a
+    # Step 1: Transpose for i < j
+    for i in range(len(m)):
+        for j in range(i+1, len(m)):
+            m[i][j], m[j][i] = m[j][i], m[i][j]
+    
+    # Step 2: Reverse each row
+    for i in range(len(m)):
+        m[i].reverse()
 
 spiral matrix
 def spiralOrder(matrix):
