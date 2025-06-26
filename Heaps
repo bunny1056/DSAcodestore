@@ -247,19 +247,12 @@ class Solution:
 
         return time
 
-consecutive cards
-import heapq
-from collections import defaultdict
-
 class Solution:
     def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
         if len(hand) % groupSize != 0:
             return False
         
-        count = defaultdict(int)
-        for num in hand:
-            count[num] += 1
-        
+        count = Counter(hand)
         min_heap = list(count.keys())
         heapq.heapify(min_heap)
         
@@ -271,13 +264,10 @@ class Solution:
                 count[i] -= 1
                 if count[i] == 0:
                     if i != heapq.heappop(min_heap):
-                        return False
+                        return False 
         return True
 
 DEsign twitter
-import heapq
-from collections import defaultdict
-
 import heapq
 from collections import defaultdict
 
