@@ -92,18 +92,6 @@ class Solution:
             root = root.right
         return True
 
-How the Code Works
-Start at the Root:
-Begin traversing from the root of the BST.
-Compare Values:
-If both p and q are greater than the current node's value, their LCA must be in the right subtree.
-If both p and q are smaller than the current node's value, their LCA must be in the left subtree.
-If neither condition is met, the current node is the LCA because:
-One of p or q is equal to the current node (ancestor of itself), or
-p and q are in different subtrees (so the current node is their last common ancestor).
-Termination:
-The loop exits when the current node is the LCA, which is then returned.
-
 def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
         while root:
             if p.val > root.val and q.val > root.val:
@@ -123,7 +111,6 @@ def bstFromPreorder(self, preorder: List[int]) -> Optional[TreeNode]:
         root.left = self.bstFromPreorder(preorder[1:i])
         root.right = self.bstFromPreorder(preorder[i:])
         return root
-Explanation
 
 def search(root, val):
     while root:
