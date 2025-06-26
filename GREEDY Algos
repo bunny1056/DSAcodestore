@@ -17,6 +17,17 @@ def activitySelection(start, finish):
 
     return count
 
+class Solution:
+    def findLongestChain(self, pairs: List[List[int]]) -> int:
+        pairs.sort(key=lambda x: x[1])
+        cur_end = float('-inf')
+        count = 0
+        for s, e in pairs:
+            if s > cur_end:
+                count += 1
+                cur_end = e
+        return count
+
 max_meetings
 def maximumMeetings(self, start, end):
     meetings = list(zip(start, end))
@@ -590,14 +601,3 @@ def longestZigZag(arr):
             prev_diff = diff
 
     return count
-
-class Solution:
-    def findLongestChain(self, pairs: List[List[int]]) -> int:
-        pairs.sort(key=lambda x: x[1])
-        cur_end = float('-inf')
-        count = 0
-        for s, e in pairs:
-            if s > cur_end:
-                count += 1
-                cur_end = e
-        return count
