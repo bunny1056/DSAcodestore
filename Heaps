@@ -36,18 +36,13 @@ def heap_sort(arr):
         heapify(arr, i, 0)  # Heapify reduced heap
     return arr
 
-kLargest
-import heapq
-
 def kLargest(arr, k):
-    # Python's heapq module only provides min-heap, so we invert the values to simulate a max-heap
-    max_heap = [-x for x in arr]
-    heapq.heapify(max_heap) ## if we return -x for x in max_heap it will be max_heap
-    result = []
-    for _ in range(k):
-        if max_heap:
-            result.append(-heapq.heappop(max_heap))
-    return result
+    min_heap = []
+    for num in arr:
+        heapq.heappush(min_heap, num)
+        if len(min_heap) > k:
+            heapq.heappop(min_heap)
+    return sorted(min_heap, reverse=True)
 
 merge K sorted arrays
 import heapq
@@ -67,6 +62,25 @@ def mergeKArrays(self, arr, K):
             heapq.heappush(min_heap, (next_val, arr_idx, elem_idx + 1))
     
     return merged
+
+merge LLsorted
+def mergeKLists(lists):
+    heap = []
+    for idx, node in enumerate(lists):
+        if node:
+            heapq.heappush(heap, (node.val, idx, node))
+
+    dummy = ListNode(0)
+    curr = dummy
+
+    while heap:
+        val, idx, node = heapq.heappop(heap)
+        curr.next = node
+        curr = curr.next
+        if node.next:
+            heapq.heappush(heap, (node.next.val, idx, node.next))
+
+    return dummy.next
 
 REorganize string
 import heapq
@@ -93,32 +107,7 @@ def reorganizeString(s):
         prev_freq, prev_char = freq + 1, char
     # Check if the result length matches the input string length
     return ''.join(res) if len(res) == len(s) else "" ##res = ['a', 'b', 'a'] → ''.join(res) = "aba".
-
- merge sorted linked lists
-def mergeKLists(self, arr):
-        # code here
-        # return head of merged list
-        min_heap = []
-        for i in range(len(arr)):
-            if arr[i]:
-                heapq.heappush(min_heap,(arr[i].data,arr[i]))
-        res = []
-        while min_heap:
-            val, pointer = heapq.heappop(min_heap)
-            res.append(val)
-            if pointer.next:
-                pointer = pointer.next
-                next_val = pointer.data
-                heapq.heappush(min_heap,(next_val,pointer))
-        root = Node(res[0])
-        curr = root
-        i = 1
-        while i < len(res):
-            curr.next = Node(res[i])
-            curr = curr.next
-            i = i+1
-        return root
-            
+         
 smallestrangeinKLists
 import heapq
 class Solution:
