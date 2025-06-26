@@ -39,59 +39,6 @@ Floor/Ceil in BST
                 root = root.left  # Search left for a smaller value
         return floor
 
-
-    def findMin(self, node):
-        current = node
-        while current.left:
-            current = current.left
-        return current
-    
-    def findMax(self, node):
-        current = node
-        while current.right:
-            current = current.right
-        return current
-
-def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
-    count = 0
-    def dfs(node: Optional[TreeNode]) -> int:
-        if not node:
-            return None
-
-        value = dfs(node.left)
-        if value is not None:
-            return value
-
-        nonlocal count
-        count += 1
-        if count == k:
-            return node.val
-
-        value = dfs(node.right)
-        if value is not None:
-            return value
-
-        return None
-    return dfs(root)
-
-valid BST
-
-class Solution:
-    def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        stack = []
-        prev = None
-        
-        while stack or root:
-            while root:
-                stack.append(root)
-                root = root.left
-            root = stack.pop()
-            if prev is not None and root.val <= prev.val:
-                return False
-            prev = root
-            root = root.right
-        return True
-
 def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
         while root:
             if p.val > root.val and q.val > root.val:
@@ -100,10 +47,9 @@ def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -
                 root = root.left
             else:
                 return root
+
 BSTfrompreorder
-def bstFromPreorder(self, preorder: List[int]) -> Optional[TreeNode]:
-        if not preorder:
-            return None        
+def bstFromPreorder(self, preorder: List[int]) -> Optional[TreeNode]:       
         root = TreeNode(preorder[0])
         i = 1
         while i < len(preorder) and preorder[i] < root.val:
@@ -149,6 +95,18 @@ def delete(root, val):
         root.right = delete(root.right, temp.val)
     return root
 
+    def findMin(self, node):
+        current = node
+        while current.left:
+            current = current.left
+        return current
+    
+    def findMax(self, node):
+        current = node
+        while current.right:
+            current = current.right
+        return current
+
 def successor(root, p):
     succ = None
     while root:
@@ -169,14 +127,37 @@ def predecessor(root, p):
             root = root.left
     return pred
 
-TwoSum in BST
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
+def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+    stack = []
+    curr = root
+    while curr or stack: #inorder traversal
+        while curr:
+            stack.append(curr)
+            curr = curr.left
+        curr = stack.pop()
+        k -= 1
+        if k == 0:
+            return curr.val
+        curr = curr.right
 
+valid BST
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        stack = []
+        prev = None
+        
+        while stack or root:
+            while root:
+                stack.append(root)
+                root = root.left
+            root = stack.pop()
+            if not prev and root.val <= prev.val:
+                return False
+            prev = root
+            root = root.right
+        return True
+
+TwoSum in BST
 class Solution:
     def findTarget(self, root: Optional[TreeNode], k: int) -> bool:
         seen = set()
@@ -196,10 +177,6 @@ class Solution:
         return False
 
 def recoverTree(self, root: Optional[TreeNode]) -> None:
-        """
-        Do not return anything, modify root in-place instead.
-        """
-        
         stack = []
         current = root
         prev = None
