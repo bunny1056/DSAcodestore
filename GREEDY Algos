@@ -165,7 +165,7 @@ def canJump(nums):
         max_reach = max(max_reach, i + nums[i])
         if max_reach >= len(nums) - 1:
             return True
-    return True
+    return False
 
 Jump Game II
 def jump(nums):
@@ -251,7 +251,7 @@ def jobSequencing(self, deadline, profit):
         ans = [0,0]
         
         for job in jobs:
-            if job[0] > len(pq):
+            if job[0] > len(pq): #means we still have room to schedule within d slots.
                 heapq.heappush(pq,job[1])
             elif pq and pq[0] < job[1]:
                 heapq.heappushpop(pq,job[1])
@@ -262,29 +262,6 @@ def jobSequencing(self, deadline, profit):
         
         return ans
 
-job sequencing problm
-def job_sequencing(deadline, profit):
-    n = len(deadline)
-    jobs = list(zip(deadline, profit))
-    # Sort jobs by profit in descending order
-    jobs.sort(key=lambda x: -x[1])
-    
-    max_deadline = max(deadline)
-    slots = [False] * (max_deadline + 1)  # 1-based indexing
-    
-    count = 0
-    total_profit = 0
-    
-    for d, p in jobs:
-        # Find the latest available slot before deadline d
-        for i in range(d, 0, -1):
-            if not slots[i]:
-                slots[i] = True
-                count += 1
-                total_profit += p
-                break
-    
-    return [count, total_profit]
 def egyptian_fraction(a, b):
     result = []
     while a != 0:
@@ -299,7 +276,6 @@ def egyptian_fraction(a, b):
 
 Fractional Knapsack
 def fractionalknapsack(self, val, wt, capacity):
-        #code here
         n = len(val)
         ratios = []
         for i in range(n):
@@ -320,27 +296,16 @@ def fractionalknapsack(self, val, wt, capacity):
                 break
         return float(total_val)
 
-def smallestNumber(s, d):
-    if s == 0:
-        return "0" if d == 1 else "-1"
-    if s > 9 * d:
+def smallestNumber(s: int, d: int) -> str:
+    if s < 1 or s > 9 * d:
         return "-1"
-    res = []
-    remaining_sum = s
-    for i in range(d):
-        if i == 0:
-            # First digit can't be zero
-            min_digit = 1
-        else:
-            min_digit = 0
-        # The remaining digits (d - i - 1) can contribute at most 9 each
-        remaining_digits = d - i - 1
-        for digit in range(min_digit, 10):
-            remaining_after = remaining_sum - digit
-            if 0 <= remaining_after <= 9 * remaining_digits:
-                res.append(str(digit))
-                remaining_sum = remaining_after
-                break
+    res = ['0'] * d
+    s -= 1 #ensuring leading digit = 1
+    for i in range(d - 1, 0, -1):
+        take = min(9, s)
+        res[i] = str(take)
+        s -= take
+    res[0] = str(s + 1)
     return ''.join(res)
 
 CHOCOLA problem min cost to cut in 1X1 squares (same as merge sort)
