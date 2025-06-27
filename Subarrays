@@ -52,15 +52,6 @@ def subarrays_div_by_k(nums, k):
     
     return count
 
-def max_sum_subarray_size_k(nums, k):
-    max_sum = window_sum = sum(nums[:k])  # Initialize with sum of first k elements
-    
-    for i in range(k, len(nums)):
-        window_sum += nums[i] - nums[i - k]  # Slide window: add new element, remove oldest
-        max_sum = max(max_sum, window_sum)   # Update max_sum if window_sum is larger
-    
-    return max_sum
-
 Longest Substring Without Repeating Characters
 def length_of_longest_substring(s):
     char_set = set()
@@ -134,8 +125,6 @@ def minWindow(s: str, t: str) -> str:
     
     return "" if min_len == float('inf') else s[min_window_start:min_window_start + min_len]
 
-from collections import defaultdict
-
 def totalFruit(fruits):
     basket = defaultdict(int)  # Fix: Use defaultdict to avoid KeyError
     left = 0
@@ -154,30 +143,6 @@ def totalFruit(fruits):
         max_fruits = max(max_fruits, right - left + 1)
     
     return max_fruits
-
-def numSubarraysWithSum(self, nums: List[int], goal: int) -> int:
-        sum_index = {0:1}
-        curr_sum = 0
-        count = 0
-
-        for num in nums:
-            curr_sum += num
-            if curr_sum - goal in sum_index:
-                count += sum_index[curr_sum - goal]
-            sum_index[curr_sum] = sum_index.get(curr_sum,0) + 1
-        return count
-def numberOfSubarrays(self, nums: List[int], k: int) -> int:
-        sum_index = {0:1}
-        curr_sum = 0
-        count = 0
-        goal = k
-
-        for num in nums:
-            curr_sum += 1 if num%2 == 1 else 0
-            if curr_sum - goal in sum_index:
-                count += sum_index[curr_sum - goal]
-            sum_index[curr_sum] = sum_index.get(curr_sum,0) + 1
-        return count
 
 def numberOfSubstrings(self, s: str) -> int:
         freq = {}
@@ -198,25 +163,6 @@ def numberOfSubstrings(self, s: str) -> int:
                 left += 1
         
         return count
-
-def maxScore(cardPoints, k):
-    n = len(cardPoints)
-    total_sum = sum(cardPoints)
-    window_size = n - k
-    
-    if window_size == 0:
-        return total_sum
-    
-    # Initial window sum of size n-k
-    window_sum = sum(cardPoints[:window_size])
-    min_window_sum = window_sum
-    
-    # Slide the window
-    for i in range(window_size, n):
-        window_sum = window_sum + cardPoints[i] - cardPoints[i - window_size]
-        min_window_sum = min(min_window_sum, window_sum)
-    
-    return total_sum - min_window_sum
 
 longest substrings with K uniques
 def longestKUnique(s: str, k: int) -> int:
@@ -261,6 +207,34 @@ def subarraysWithKDistinct(nums, k):
         return count
     
     return atMostK(k) - atMostK(k - 1)
+
+def max_sum_subarray_size_k(nums, k):
+    max_sum = window_sum = sum(nums[:k])  # Initialize with sum of first k elements
+    
+    for i in range(k, len(nums)):
+        window_sum += nums[i] - nums[i - k]  # Slide window: add new element, remove oldest
+        max_sum = max(max_sum, window_sum)   # Update max_sum if window_sum is larger
+    
+    return max_sum
+
+def maxScore(cardPoints, k):
+    n = len(cardPoints)
+    total_sum = sum(cardPoints)
+    window_size = n - k
+    
+    if window_size == 0:
+        return total_sum
+    
+    # Initial window sum of size n-k
+    window_sum = sum(cardPoints[:window_size])
+    min_window_sum = window_sum
+    
+    # Slide the window
+    for i in range(window_size, n):
+        window_sum = window_sum + cardPoints[i] - cardPoints[i - window_size]
+        min_window_sum = min(min_window_sum, window_sum)
+    
+    return total_sum - min_window_sum
 
 from collections import deque
 from typing import List
