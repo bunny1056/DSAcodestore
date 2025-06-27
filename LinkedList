@@ -32,6 +32,51 @@ def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Opt
         prev.next = next_node
     
     return dummy.next
+Reverese III
+def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+    if not head or not head.next or k == 1:
+        return head
+    
+    def reverse(head, k):
+        prev = None
+        current = head
+        while k > 0:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+            k -= 1
+        return prev
+    
+    dummy = ListNode(0)
+    dummy.next = head
+    prev_group_end = dummy
+    
+    while True:
+        # Check if there are at least k nodes left
+        group_start = prev_group_end.next
+        current = group_start
+        count = 0
+        while current and count < k:
+            current = current.next
+            count += 1
+        
+        if count == k:
+            # Reverse the group
+            reversed_head = reverse(group_start, k)
+            
+            # Connect the previous group to the reversed group
+            prev_group_end.next = reversed_head
+            
+            # Connect the reversed group to the next node
+            group_start.next = current
+            
+            # Update prev_group_end for next iteration
+            prev_group_end = group_start
+        else:
+            break
+    
+    return dummy.next
 
 Slow and Fast pointers
 def hasCycle(self, head: Optional[ListNode]) -> bool:
@@ -91,29 +136,20 @@ class Solution:
             end = end.next
         return True
 
-def oddEvenList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        if head is None or head.next is None:
+class Solution(object):
+    def oddEvenList(self, head):
+        if not head or not head.next:
             return head
-        current = head
-        temp = head
-        prev = head.next
-        while current and current.next:
-            current = current.next.next
-            if current is not None:
-                #insertion of node
-                new_node = ListNode(current.val)
-                new_node.next = temp.next
-                temp.next = new_node
 
-                #deletion of node
-                prev.next = current.next
+        odd, even = head, head.next
+        even_head = even
 
-                #adjust pointers
-                current = prev
-                temp = new_node
-                prev = prev.next
+        while even and even.next:
+            odd.next, even.next = odd.next.next, even.next.next
+            odd, even = odd.next, even.next
 
-        return head  
+        odd.next = even_head
+        return head
 
 class Solution:
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
@@ -268,11 +304,7 @@ class Solution:
         # Reverse the list back to original order
         return reverse(head)
 
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-
+add two lists
 class Solution:
     def addTwoLists(self, l1, l2):
         dummy = Node(0)
@@ -289,55 +321,12 @@ class Solution:
             current.next = Node(new_digit)
 
             current = current.next
-            if l1: l1 = l1.next
-            if l2: l2 = l2.next
+            if l1:
+                l1 = l1.next
+            if l2: 
+                l2 = l2.next
 
         return dummy.next
-
-def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
-    if not head or not head.next or k == 1:
-        return head
-    
-    def reverse(head, k):
-        prev = None
-        current = head
-        while k > 0:
-            next_node = current.next
-            current.next = prev
-            prev = current
-            current = next_node
-            k -= 1
-        return prev
-    
-    dummy = ListNode(0)
-    dummy.next = head
-    prev_group_end = dummy
-    
-    while True:
-        # Check if there are at least k nodes left
-        group_start = prev_group_end.next
-        current = group_start
-        count = 0
-        while current and count < k:
-            current = current.next
-            count += 1
-        
-        if count == k:
-            # Reverse the group
-            reversed_head = reverse(group_start, k)
-            
-            # Connect the previous group to the reversed group
-            prev_group_end.next = reversed_head
-            
-            # Connect the reversed group to the next node
-            group_start.next = current
-            
-            # Update prev_group_end for next iteration
-            prev_group_end = group_start
-        else:
-            break
-    
-    return dummy.next
 
 class Solution:
     def copyRandomList(self, head: 'Node') -> 'Node':
