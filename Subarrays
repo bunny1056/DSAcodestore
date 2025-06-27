@@ -52,6 +52,19 @@ def subarrays_div_by_k(nums, k):
     
     return count
 
+def beautifulSubarrays(nums):
+    prefix_xor = 0
+    count = 0
+    xor_freq = {0: 1}  # Initialize with XOR 0 having frequency 1
+    
+    for num in nums:
+        prefix_xor ^= num  # Update cumulative XOR
+        # If prefix_xor exists in map, add its frequency to count
+        count += xor_freq.get(prefix_xor, 0)
+        xor_freq[prefix_xor] = xor_freq.get(prefix_xor, 0) + 1
+    
+    return count
+
 Longest Substring Without Repeating Characters
 def length_of_longest_substring(s):
     char_set = set()
@@ -67,28 +80,11 @@ def length_of_longest_substring(s):
     
     return max_len
 
-def beautifulSubarrays(nums):
-    prefix_xor = 0
-    count = 0
-    xor_freq = {0: 1}  # Initialize with XOR 0 having frequency 1
-    
-    for num in nums:
-        prefix_xor ^= num  # Update cumulative XOR
-        # If prefix_xor exists in map, add its frequency to count
-        count += xor_freq.get(prefix_xor, 0)
-        # Update frequency of current prefix_xor
-        xor_freq[prefix_xor] = xor_freq.get(prefix_xor, 0) + 1
-    
-    return count
-
 def minWindow(s: str, t: str) -> str:
     if not s or not t:
         return ""
     
-    # Count frequency of characters in t
-    t_count = {}
-    for char in t:
-        t_count[char] = t_count.get(char, 0) + 1
+    t_count = Counter(t)
     
     # Initialize variables
     required = len(t_count)  # Number of unique chars in t
@@ -208,6 +204,25 @@ def subarraysWithKDistinct(nums, k):
     
     return atMostK(k) - atMostK(k - 1)
 
+class Solution:
+    def characterReplacement(self, s: str, k: int) -> int:
+        max_freq = 0
+        max_len = 0
+        freq = {}
+        left = 0
+
+        for right in range(len(s)):
+            freq[s[right]] = freq.get(s[right],0) + 1
+            max_freq = max(max_freq, freq[s[right]])
+
+            if right - left + 1 - max_freq > k:
+                freq[s[left]] -= 1
+                if freq[s[left]] == 0:
+                    del freq[s[left]]
+                left += 1
+            max_len = max(max_len, right - left + 1)
+        return max_len
+
 def max_sum_subarray_size_k(nums, k):
     max_sum = window_sum = sum(nums[:k])  # Initialize with sum of first k elements
     
@@ -231,7 +246,7 @@ def maxScore(cardPoints, k):
     
     # Slide the window
     for i in range(window_size, n):
-        window_sum = window_sum + cardPoints[i] - cardPoints[i - window_size]
+        window_sum += cardPoints[i] - cardPoints[i - window_size]
         min_window_sum = min(min_window_sum, window_sum)
     
     return total_sum - min_window_sum
@@ -258,7 +273,7 @@ class Solution:
             dq.append(i)
 
             # Add to result when first window is complete
-            if i >= k - 1:
+            if i - k + 1 >= 0:
                 result.append(nums[dq[0]])
 
         return result
