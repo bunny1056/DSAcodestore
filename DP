@@ -416,7 +416,7 @@ def maxProfit_with_fee(prices, fee):
         hold = max(hold, cash - price)
     return cash
 
-
+DP on LIS
 def lengthOfLIS(nums):
     if not nums:
         return 0
@@ -445,44 +445,38 @@ def maxSumIS(arr):
     return max_sum
 
 printLIS
-def printLIS(nums):
+def get_LIS_dp(nums):
     n = len(nums)
-    if n == 0:
-        return []
-    
-    # Initialize DP and prev arrays
-    dp = [1] * n  # dp[i] = length of LIS ending at nums[i]
-    prev = [-1] * n  # prev[i] = index of previous element in LIS
-    
-    for i in range(1, n):
+    dp = [1] * n           # LIS length ending at i
+    parent = [-1] * n      # To reconstruct path
+
+    max_len = 1
+    last_index = 0
+
+    for i in range(n):
         for j in range(i):
             if nums[i] > nums[j] and dp[i] < dp[j] + 1:
                 dp[i] = dp[j] + 1
-                prev[i] = j  # Update previous index
-    
-    # Find the index of the maximum value in dp (end of LIS)
-    max_len = max(dp)
-    last_idx = dp.index(max_len)
-    
-    # Reconstruct the LIS using prev array
+                parent[i] = j
+
+        if dp[i] > max_len:
+            max_len = dp[i]
+            last_index = i
+
     lis = []
-    while last_idx != -1:
-        lis.append(nums[last_idx])
-        last_idx = prev[last_idx]
-    
-    return lis[::-1]  # Reverse to get increasing order
+    while last_index != -1:
+        lis.append(nums[last_index])
+        last_index = parent[last_index]
+
+    return lis[::-1]  # Reverse to get correct order
+
 def findNumberOfLIS(nums):
     n = len(nums)
-    if n == 0:
-        return 0
-    if n == 1:
-        return 1
-
+    
     # Initialize arrays for length and count of LIS ending at each index
     length = [1] * n  # Length of LIS ending at index i
     count = [1] * n   # Number of LIS of length length[i] ending at index i
 
-    # Compute LIS lengths and counts
     max_length = 1  # Track maximum LIS length
     for i in range(1, n):
         for j in range(i):
@@ -758,6 +752,28 @@ def isMatch(self, s: str, p: str) -> bool:
 
     return dp[m][n]
 
+def isMatch(s, p):
+    m, n = len(s), len(p)
+    dp = [[False] * (n + 1) for _ in range(m + 1)]
+    dp[0][0] = True
+
+    # Deals with patterns like a*, a*b*, a*b*c*
+    for j in range(2, n + 1):
+        if p[j - 1] == '*':
+            dp[0][j] = dp[0][j - 2]
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if p[j - 1] == '.' or p[j - 1] == s[i - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+            elif p[j - 1] == '*':
+                dp[i][j] = dp[i][j - 2]  # Zero occurrence
+                if p[j - 2] == s[i - 1] or p[j - 2] == '.':
+                    dp[i][j] = dp[i][j] or dp[i - 1][j]  # One or more occurrences
+
+    return dp[m][n]
+
+DP on Squares
 maximal Square
 def maximalSquare(matrix):
     if not matrix or not matrix[0]:
@@ -783,6 +799,26 @@ def maximalSquare(matrix):
                 max_side = max(max_side, dp[i][j])
 
     return max_side * max_side  # Area
+
+def countSquares(matrix):
+    m, n = len(matrix), len(matrix[0])
+    dp = [[0] * n for _ in range(m)]
+    total = 0
+
+    for i in range(m):
+        for j in range(n):
+            if matrix[i][j] == 1:
+                if i == 0 or j == 0:
+                    dp[i][j] = 1  # edges can only be 1x1 squares
+                else:
+                    dp[i][j] = 1 + min(
+                        dp[i-1][j],    # top
+                        dp[i][j-1],    # left
+                        dp[i-1][j-1]   # top-left
+                    )
+                total += dp[i][j]
+
+    return total
 
 def largestZeroSumSubmatrix(matrix):
     R = len(matrix)
@@ -845,6 +881,7 @@ def largestSubmatrixEqual01(mat):
 
     return max_area
 
+DP on matrix multiplication
 Matrix Multiplication
 def matrixChainMultiplication(dimensions: list[int]) -> int:
     n = len(dimensions) - 1  # Number of matrices
