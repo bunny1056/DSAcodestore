@@ -571,7 +571,28 @@ class Solution:
 
         return -1  # no path
 
+def largestDistance(n, edges):
+    #Write your code here
+    adj = defaultdict(list)
+    for a, b in edges:
+        adj[a].append(b)
+        adj[b].append(a)
+    
+    def dfs(node,parent,depth,result):
+        if depth > result[0]:
+            result[0] = depth
+            result[1] = node
+        
+        for neighbor in adj[node]:
+            if neighbor != parent:
+                dfs(neighbor,node,depth + 1,result)
+    
+    result1 = [0,0]
+    dfs(0,-1,0,result1)
+    result2 = [0,0]
+    dfs(result1[1],-1,0,result2)
 
+    return result2[0]      
 
 
 
