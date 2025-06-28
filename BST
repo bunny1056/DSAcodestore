@@ -243,3 +243,46 @@ class BSTIterator:
 
     def hasNext(self) -> bool:
         return len(self.stack) > 0
+
+def bstQueries(root, q, queries):
+    # Step 1: Inorder traversal to get sorted node values
+    sorted_nodes = []
+
+    def inorder(node):
+        if not node:
+            return
+        inorder(node.left)
+        sorted_nodes.append(node.data)
+        inorder(node.right)
+
+    inorder(root)
+
+    # Step 2: Define custom lower_bound and upper_bound
+    def lower_bound(arr, target):
+        lo, hi = 0, len(arr)
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if arr[mid] < target:
+                lo = mid + 1
+            else:
+                hi = mid
+        return lo
+
+    def upper_bound(arr, target):
+        lo, hi = 0, len(arr)
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if arr[mid] <= target:
+                lo = mid + 1
+            else:
+                hi = mid
+        return lo
+
+    # Step 3: Process queries using manual binary search
+    result = []
+    for L, R in queries:
+        left = lower_bound(sorted_nodes, L)
+        right = upper_bound(sorted_nodes, R)
+        result.append(right - left)
+
+    return result
