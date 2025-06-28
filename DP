@@ -293,6 +293,24 @@ result = []
 
 #for product subsets dp[prod] += dp[prod//coin] if divisible and intialize dp[1] = 1
 
+mindifferencesubsets
+def minDifference(self, arr):
+		nums = arr
+		total = sum(nums)
+        n = len(nums)
+        target = total // 2
+
+        dp = [False] * (target + 1)
+        dp[0] = True
+
+        for num in nums:
+            for j in range(target, num - 1, -1):
+                dp[j] = dp[j] or dp[j - num]
+
+        for s1 in range(target, -1, -1):
+            if dp[s1]:
+                return abs(total - 2 * s1)
+
 Coin change I
 def coinChange(self, coins: List[int], amount: int) -> int:
     max_val = amount + 1  # A placeholder for "infinity" (no. of coins can’t exceed amount)
