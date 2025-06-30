@@ -59,34 +59,7 @@ def frogJumpK(heights, k):
             dp[i] = min(dp[i], cost)
 
     return dp[n-1]
-def canJump(nums: List[int]) -> bool:
-    n = len(nums)
-    dp = [False] * n
-    dp[0] = True  # Start position is always reachable
 
-    for i in range(n):
-        if not dp[i]:
-            continue  # skip if not reachable
-        # Mark all positions reachable from i
-        for j in range(i + 1, min(n, i + nums[i] + 1)):
-            dp[j] = True
-
-    return dp[-1]  # Check if last index is reachable
-
-def minJumps(nums: List[int]) -> int:
-    n = len(nums)
-    dp = [float('inf')] * n
-    dp[0] = 0  # 0 jumps needed to reach the first index
-
-    for i in range(n):
-        # Only proceed if we can reach index i
-        if dp[i] == float('inf'):
-            continue
-        # Update all positions reachable from i
-        for j in range(i + 1, min(n, i + nums[i] + 1)):
-            dp[j] = min(dp[j], dp[i] + 1)
-
-    return dp[-1] if dp[-1] != float('inf') else -1
 def canCross(stones):
     if not stones or stones[1] != 1:
         return False
