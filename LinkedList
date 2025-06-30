@@ -267,43 +267,6 @@ def segregate(self, head):
 
     return ptr1  # Either the intersection node or None
 
-class Solution:
-    def addOne(self, head):
-        # Helper function to reverse the linked list
-        def reverse(head):
-            current = head
-            prev = None
-            while current:
-                next_node = current.next
-                current.next = prev
-                prev = current
-                current = next_node
-            return prev
-        
-        # Reverse the linked list to process from least significant digit
-        head = reverse(head)
-        
-        current = head
-        carry = 1  # Start with adding 1
-        
-        while current:
-            sum_val = current.data + carry
-            carry = sum_val // 10
-            current.data = sum_val % 10
-            
-            # If no more carry, break early
-            if carry == 0:
-                break
-            
-            # Move to the next node, create a new node if necessary
-            if not current.next and carry:
-                current.next = Node(carry)
-                break
-            current = current.next
-        
-        # Reverse the list back to original order
-        return reverse(head)
-
 add two lists
 class Solution:
     def addTwoLists(self, l1, l2):
@@ -328,6 +291,50 @@ class Solution:
 
         return dummy.next
 
+def subtractLinkedLists(l1: ListNode, l2: ListNode) -> ListNode:
+    # Helper: Convert linked list to stack of digits
+    def to_stack(node):
+        stack = []
+        while node:
+            stack.append(node.val)
+            node = node.next
+        return stack
+
+    # Helper: Remove leading zeros from result
+    def trim_leading_zeros(node):
+        while node and node.val == 0 and node.next:
+            node = node.next
+        return node
+
+    # Step 1: Convert both linked lists to stacks
+    s1, s2 = to_stack(l1), to_stack(l2)
+
+    # Step 2: Ensure s1 is the larger number (lexicographically)
+    if len(s1) < len(s2) or (len(s1) == len(s2) and s1 < s2):
+        s1, s2 = s2, s1  # Always subtract smaller from larger
+
+    # Step 3: Subtract digit by digit
+    carry = 0
+    head = None
+
+    while s1:
+        x = s1.pop()
+        y = s2.pop() if s2 else 0
+
+        diff = x - carry - y
+        if diff < 0:
+            diff += 10
+            carry = 1
+        else:
+            carry = 0
+
+        # Prepend result node
+        head = ListNode(diff, head)
+
+    # Step 4: Remove leading zeros
+    return trim_leading_zeros(head)
+
+random next pointer
 class Solution:
     def copyRandomList(self, head: 'Node') -> 'Node':
         if not head:
