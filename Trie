@@ -31,3 +31,21 @@ class Trie:
                 return False
             node = node.children[ch]
         return True 
+
+def _delete(node, word, depth):
+            if depth == len(word):
+                if not node.end_of_word:
+                    return False  # Word doesn't exist
+                node.end_of_word = False
+                return len(node.children) == 0  # If no children, node can be deleted
+            ch = word[depth]
+            if ch not in node.children:
+                return False  # Word doesn't exist
+            should_delete_child = _delete(node.children[ch], word, depth + 1)
+
+            if should_delete_child:
+                del node.children[ch]
+                return len(node.children) == 0 and not node.end_of_word
+            return False
+
+        return _delete(self.root, word, 0)
